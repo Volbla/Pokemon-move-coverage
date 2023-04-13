@@ -3,12 +3,14 @@ export { calcBestEffectiveness }
 const TYPECOUNT = 18
 const typeNames = ["Normal", "Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark", "Fairy"]
 const defenders = await fetch("defenders.json").then(response => response.json())
+const defenderSequence = Object.entries(defenders)
 
 
 function calcBestEffectiveness(count, exclude, include) {
 	// [0, 1, 2,...]
 	let attacks = Array.from({ length: count }, (_, i) => i)
 	let results = []
+	let attack_types, tally, heels, best
 
 	exclude = intify(exclude)
 	include = intify(include)
@@ -19,17 +21,21 @@ function calcBestEffectiveness(count, exclude, include) {
 		if (include && !allin(include, attacks))
 			continue
 
-		let attack_types = attacks.map(i => typeNames[i]).join(", ")
+		attack_types = attacks.map(i => typeNames[i]).join(", ")
+		tally = {}
 		// https://stackoverflow.com/questions/6600868/set-default-value-of-javascript-object-attributes
-		let tally = {}; let tallyproxy = new Proxy(tally, intdefault);
-		let heels = {}; let heelsproxy = new Proxy(heels, listdefault);
+		heels = {}; let heelsproxy = new Proxy(heels, listdefault);
 
-		for (const [types, effect] of Object.entries(defenders)){
+		for (const [types, effect] of defenderSequence){
 			// Skip levitate defenders if attacks doesn't include ground.
 			if (!attacks.includes(4) && types.endsWith("(Levitate)")) break
 
-			let best = attacks.map(i => effect[i]).reduce((x, y) => Math.max(x, y))
-			tallyproxy[best] += 1
+			best = attacks.reduce((a, b) => Math.max(a, effect[b]), 0)
+			// Not using the Proxy because it's way too slow.
+			if (!Object.hasOwn(tally, best))
+				tally[best] = 0
+			tally[best] += 1
+
 			if (best < 1)
 				heelsproxy[best].push(types)
 		}
