@@ -13,24 +13,56 @@
 			text-align: center;
 			background-color: white;
 		}
-		.head {
+		#head {
 			display: block;
 			background-color: aliceblue;
 		}
-		button, input {
-			margin: 3px;
-			margin-bottom: 6px;
-		}
-		/* input:focus-visible {
-			outline: none;
-		} */
-		button.active {
-			border-color: green;
-			border-radius: 3px;
-		}
-		table {
+		.center {
 			margin-left: auto;
 			margin-right: auto;
+		}
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(4, 8.5ch);
+		}
+		button {
+			border: 1px solid black;
+			border-radius: 3px;
+			margin: 3px;
+		}
+		.countButton {
+			min-width: 3.2ch;
+		}
+		.grid > button {
+			border: 1px solid black;
+			border-radius: 3px;
+			color: white;
+		}
+		button.active {
+			outline: outset #CAA968;
+		}
+		.type-normal { background:#A8A878; }
+		.type-fighting { background:#C03028; }
+		.type-flying { background:#A890F0; }
+		.type-poison { background:#A040A0; }
+		.type-ground { background:#E0C068; }
+		.type-rock { background:#B8A038; }
+		.type-bug { background:#A8B820; }
+		.type-ghost { background:#705898; }
+		.type-steel { background:#B8B8D0; }
+		.type-fire { background:#F08030; }
+		.type-water { background:#6890F0; }
+		.type-grass { background:#78C850; }
+		.type-electric { background:#F8D030; }
+		.type-psychic { background:#F85888; }
+		.type-ice { background:#98D8D8; }
+		.type-dragon { background:#7038F8; }
+		.type-dark { background:#705848; }
+		.type-fairy { background:#EE99AC; }
+	</style>
+
+	<style>
+		table {
 			border-collapse: collapse;
 		}
 		tbody {
@@ -63,24 +95,72 @@
 </head>
 
 <body>
-	<div class="head">
-		Number of attacking moves<br>
-		<button>1</button>
-		<button>2</button>
-		<button>3</button>
-		<button>4</button>
-		<br>Include these types<br>
-		<input id="includeInput">
-		<br>Exclude these types<br>
-		<input id="excludeInput">
+	<div id="head">
+		<div>
+			Number of attacking moves<br>
+			<button class="countButton">1</button>
+			<button class="countButton">2</button>
+			<button class="countButton">3</button>
+			<button class="countButton">4</button>
+		</div>
+		<div style="display: flex;">
+			<div class="center">
+				Include these types
+				<div id="includeTypes" class="grid">
+					<button class="type-normal">Normal</button>
+					<button class="type-fighting">Fighting</button>
+					<button class="type-flying">Flying</button>
+					<button class="type-poison">Poison</button>
+					<button class="type-ground">Ground</button>
+					<button class="type-rock">Rock</button>
+					<button class="type-bug">Bug</button>
+					<button class="type-ghost">Ghost</button>
+					<button class="type-steel">Steel</button>
+					<button class="type-fire">Fire</button>
+					<button class="type-water">Water</button>
+					<button class="type-grass">Grass</button>
+					<button class="type-electric">Electric</button>
+					<button class="type-psychic">Psychic</button>
+					<button class="type-ice">Ice</button>
+					<button class="type-dragon">Dragon</button>
+					<button class="type-dark">Dark</button>
+					<button class="type-fairy">Fairy</button>
+				</div>
+				<button id="includeReset">reset</button>
+			</div>
+			<div class="center">
+				Exclude these types
+				<div id="excludeTypes" class="grid">
+					<button class="type-normal">Normal</button>
+					<button class="type-fighting">Fighting</button>
+					<button class="type-flying">Flying</button>
+					<button class="type-poison">Poison</button>
+					<button class="type-ground">Ground</button>
+					<button class="type-rock">Rock</button>
+					<button class="type-bug">Bug</button>
+					<button class="type-ghost">Ghost</button>
+					<button class="type-steel">Steel</button>
+					<button class="type-fire">Fire</button>
+					<button class="type-water">Water</button>
+					<button class="type-grass">Grass</button>
+					<button class="type-electric">Electric</button>
+					<button class="type-psychic">Psychic</button>
+					<button class="type-ice">Ice</button>
+					<button class="type-dragon">Dragon</button>
+					<button class="type-dark">Dark</button>
+					<button class="type-fairy">Fairy</button>
+				</div>
+				<button id="excludeReset">reset</button>
+			</div>
+		</div>
 	</div>
 
-	<table>
+	<table class="center">
 		<thead>
 			<tr>
-				<th>Attack types</th>
-				<th>Effect tally</th>
-				<th>Weaknesses</th>
+				<th>Attacking types</th>
+				<th>Best effect tally</th>
+				<th>Resistant targets</th>
 			</tr>
 		</thead>
 		<tbody>

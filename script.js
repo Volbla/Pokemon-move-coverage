@@ -3,38 +3,63 @@ import { calcBestEffectiveness } from "./calculate.js"
 const effectSymbol = { 4:4, 2:2, 1:1, 0.5:"½", 0.25:"¼" }
 const effectClass = { 4:"four", 2:"two", 1:"one", 0.5:"half", 0.25:"quarter" }
 
-const shouldInclude = document.getElementById("includeInput")
-const shouldExclude = document.getElementById("excludeInput")
-const countButtons = document.querySelectorAll("button")
+const shouldInclude = document.getElementById("includeTypes")?.children
+const shouldExclude = document.getElementById("excludeTypes")?.children
+const countButtons = document.getElementsByClassName("countButton")
 const table = document.querySelector("tbody")
 
 const newChild = (node, child) => node.appendChild(document.createElement(child))
 
 
 function main() {
-	if (!(shouldInclude instanceof HTMLInputElement)) return
-	if (!(shouldExclude instanceof HTMLInputElement)) return
-
-	countButtons[1].classList.add("active")
-	update()
+	if (shouldInclude == undefined) return
+	if (shouldExclude == undefined) return
 
 	for (const button of countButtons) {
-		button.addEventListener("click", e => {
-			document.querySelector("button.active")?.classList.remove("active")
+		button.addEventListener("click", () => {
+			button.parentElement?.querySelector("button.active")?.classList.remove("active")
 			button.classList.add("active")
 			moveCount = parseInt(button.innerHTML)
 			update()
 		})
 	}
-	function textDoer(variable) { return e => {
-		if (e.key == "Enter"){
-			let text = e.target.value
-			variable.a = text ? text.split(" ") : []
-			update()
+	function typeButton(listVariable) { return event => {
+		let button = event.target
+		let type = button.innerHTML
+
+		if (listVariable.a.includes(type)) {
+			let i = listVariable.a.indexOf(type)
+			listVariable.a.splice(i, 1)
+			button.classList.remove("active")
 		}
+		else {
+			listVariable.a.push(type)
+			button.classList.add("active")
+		}
+
+		update()
 	}}
-	shouldInclude.addEventListener("keypress", textDoer(doInclude))
-	shouldExclude.addEventListener("keypress", textDoer(doExclude))
+
+	for (const button of shouldInclude)
+		button.addEventListener("click", typeButton(doInclude))
+	for (const button of shouldExclude)
+		button.addEventListener("click", typeButton(doExclude))
+
+	document.getElementById("includeReset")?.addEventListener("click", () => {
+		for (const button of shouldInclude)
+			button.classList.remove("active")
+		doInclude.a.splice(0)
+		update()
+	})
+	document.getElementById("excludeReset")?.addEventListener("click", () => {
+		for (const button of shouldExclude)
+			button.classList.remove("active")
+		doExclude.a.splice(0)
+		update()
+	})
+
+	countButtons[1].classList.add("active")
+	update()
 }
 
 
@@ -49,8 +74,9 @@ function update() {
 		table.removeChild(table.firstChild);
 	}
 	let sauce = calcBestEffectiveness(moveCount, doExclude.a, doInclude.a)
+	let length = Math.min(10, sauce.length)
 
-	for (let i=0; i<10; i++) {
+	for (let i=0; i<length; i++) {
 		const [types, profile, heels] = sauce[i]
 
 		let row = newChild(table, "tr")
@@ -81,7 +107,7 @@ function update() {
 
 		let weaknessCell = newChild(row, "td")
 		weaknessCell.classList.add("bigrow")
-		for (const effect of [0.5,0.25]) {
+		for (const effect of [0.5, 0.25, 0]) {
 			if (!(heels.hasOwnProperty(effect))) continue
 
 			let subtable = newChild(newChild(weaknessCell, "table"), "tbody")
