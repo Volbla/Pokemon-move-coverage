@@ -89,8 +89,11 @@ function update() {
 		let subtable = newChild(newChild(effectCell, "table"), "tbody")
 		subtable.parentNode.classList.add("subtable")
 
+		let barheight = 0
 		for (const effect of [4,2,1,0.5,0.25]) {
 			if (!(profile.hasOwnProperty(effect))) continue
+
+			barheight += 1
 
 			let row = newChild(subtable, "tr")
 			let multi = newChild(row, "td")
@@ -107,15 +110,14 @@ function update() {
 
 		let weaknessCell = newChild(row, "td")
 		weaknessCell.classList.add("bigrow")
+		let weaknessText = newChild(weaknessCell, "div")
+		weaknessText.classList.add("smallcell")
+		weaknessText.setAttribute("style", `height: ${barheight * 19}px;`)
 		for (const effect of [0.5, 0.25, 0]) {
 			if (!(heels.hasOwnProperty(effect))) continue
 
-			let subtable = newChild(newChild(weaknessCell, "table"), "tbody")
-			subtable.parentNode.classList.add("subtable")
-			subtable.setAttribute("style", "text-align: center; color: gray")
-
 			for (const weakness of heels[effect]){
-				newChild(newChild(subtable, "tr"), "td").innerText = weakness
+				weaknessText.innerHTML += weakness + " <br>"
 			}
 		}
 	}

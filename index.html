@@ -9,17 +9,22 @@
 	<style>
 		body {
 			margin: 0;
-			margin-bottom: 18px;
+			margin-bottom: 40px;
 			text-align: center;
 			background-color: white;
+			font-family: sans-serif;
 		}
 		#head {
-			display: block;
+			padding: 8px;
 			background-color: aliceblue;
 		}
 		.center {
 			margin-left: auto;
 			margin-right: auto;
+		}
+		.flexcell {
+			margin-right: 15px;
+			margin-left: 15px;
 		}
 		.grid {
 			display: grid;
@@ -64,6 +69,7 @@
 	<style>
 		table {
 			border-collapse: collapse;
+			margin: 8px;
 		}
 		tbody {
 			text-align: left;
@@ -71,13 +77,22 @@
 		td.bigrow {
 			border: none;
 			border-top: 1px solid gray;
-			padding-top: 7px;
-			padding-bottom: 7px;
+			padding: 5px;
 		}
 		.subtable {
 			width: 100%;
 			height: 100%;
 			font-size: 87%;
+			margin: 0;
+		}
+		.smallcell {
+			text-align: center;
+			font-size: 87%;
+			color: gray;
+			overflow-y: auto;
+			scrollbar-gutter: stable both-edges;
+			padding-left: 5px;
+			padding-right: 5px;
 		}
 		.multi { text-align: center; }
 		.bar {
@@ -90,8 +105,8 @@
 		div.one { background: #ffdd57 }
 		div.half { background: #a40000 }
 		div.quarter { background: #7c0000 }
-
 	</style>
+
 </head>
 
 <body>
@@ -103,8 +118,8 @@
 			<button class="countButton">3</button>
 			<button class="countButton">4</button>
 		</div>
-		<div style="display: flex;">
-			<div class="center">
+		<div class="center" style="display: inline-flex;">
+			<div class="flexcell">
 				Include these types
 				<div id="includeTypes" class="grid">
 					<button class="type-normal">Normal</button>
@@ -128,7 +143,7 @@
 				</div>
 				<button id="includeReset">reset</button>
 			</div>
-			<div class="center">
+			<div class="flexcell">
 				Exclude these types
 				<div id="excludeTypes" class="grid">
 					<button class="type-normal">Normal</button>
