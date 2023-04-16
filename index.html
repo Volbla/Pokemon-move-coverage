@@ -7,29 +7,40 @@
 	<script src="script.js" type="module"></script>
 
 	<style>
+		/* How to make the head's background cover the full width,
+		while not shifting any content around when the scrollbar toggles. */
+		html, body {
+			height: 100%;
+			overflow: auto;
+			overflow-x: hidden;
+		}
+		#head, #main {
+			width: 100vw;
+		}
+		/* Wtf is that. */
+
 		body {
 			margin: 0;
-			margin-bottom: 40px;
 			text-align: center;
 			background-color: white;
 			font-family: sans-serif;
 		}
 		#head {
-			padding: 8px;
 			background-color: aliceblue;
 		}
+		#head, #main {
+			padding-top: 8px;
+			padding-bottom: 8px;
+		}
+		#main {
+			margin-bottom: 40px;
+		}
 		.center {
+			width: fit-content;
 			margin-left: auto;
 			margin-right: auto;
 		}
-		.flexcell {
-			margin-right: 15px;
-			margin-left: 15px;
-		}
-		.grid {
-			display: grid;
-			grid-template-columns: repeat(4, 8.5ch);
-		}
+
 		button {
 			border: 1px solid black;
 			border-radius: 3px;
@@ -38,14 +49,24 @@
 		.countButton {
 			min-width: 3.2ch;
 		}
-		.grid > button {
+
+		.flexcell {
+			margin-right: 15px;
+			margin-left: 15px;
+		}
+		.typegrid {
+			display: grid;
+			grid-template-columns: repeat(4, 8.5ch);
+		}
+		.typegrid > button {
 			border: 1px solid black;
 			border-radius: 3px;
 			color: white;
 		}
 		button.active {
-			outline: outset #CAA968;
+			outline: outset 3px #d5d819;
 		}
+
 		.type-normal { background:#A8A878; }
 		.type-fighting { background:#C03028; }
 		.type-flying { background:#A890F0; }
@@ -69,7 +90,6 @@
 	<style>
 		table {
 			border-collapse: collapse;
-			margin: 8px;
 		}
 		tbody {
 			text-align: left;
@@ -100,6 +120,7 @@
 			height: 10px;
 			display: inline-block;
 		}
+
 		div.four { background: #73d216 }
 		div.two { background: #4e9a06 }
 		div.one { background: #ffdd57 }
@@ -111,17 +132,18 @@
 
 <body>
 	<div id="head">
-		<div>
+	<div class="center">
+		<div class="center">
 			Number of attacking moves<br>
 			<button class="countButton">1</button>
 			<button class="countButton">2</button>
 			<button class="countButton">3</button>
 			<button class="countButton">4</button>
 		</div>
-		<div class="center" style="display: inline-flex;">
+		<div style="display: inline-flex;">
 			<div class="flexcell">
 				Include these types
-				<div id="includeTypes" class="grid">
+				<div id="includeTypes" class="typegrid">
 					<button class="type-normal">Normal</button>
 					<button class="type-fighting">Fighting</button>
 					<button class="type-flying">Flying</button>
@@ -145,7 +167,7 @@
 			</div>
 			<div class="flexcell">
 				Exclude these types
-				<div id="excludeTypes" class="grid">
+				<div id="excludeTypes" class="typegrid">
 					<button class="type-normal">Normal</button>
 					<button class="type-fighting">Fighting</button>
 					<button class="type-flying">Flying</button>
@@ -169,7 +191,9 @@
 			</div>
 		</div>
 	</div>
+	</div>
 
+	<div id="main">
 	<table class="center">
 		<thead>
 			<tr>
@@ -182,6 +206,6 @@
 
 		</tbody>
 	</table>
-
+	</div>
 </body>
 </html>
