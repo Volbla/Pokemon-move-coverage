@@ -2,8 +2,15 @@ export { calcBestEffectiveness }
 
 const TYPECOUNT = 18
 const typeNames = ["Normal", "Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark", "Fairy"]
-const defenders = await fetch("defenders.json").then(response => response.json())
-const defenderSequence = Object.entries(defenders)
+const defenders = await fetch("defenders_2.json").then(response => response.json())
+// Transform the hashmaps into arrays for faster iteration.
+const defenderSequences = Object.entries(defenders).map(
+	stuff => {
+		const key = stuff[0]
+		const profile = stuff[1]
+		return [key, Object.entries(profile)]
+	}
+)
 
 
 function calcBestEffectiveness(count, exclude, include) {
@@ -15,6 +22,7 @@ function calcBestEffectiveness(count, exclude, include) {
 	exclude = intify(exclude)
 	include = intify(include)
 
+
 	for (attacks; attacks[0] <= TYPECOUNT - count; nextCombination(attacks)) {
 		if (exclude && anyin(exclude, attacks))
 			continue
@@ -22,31 +30,49 @@ function calcBestEffectiveness(count, exclude, include) {
 			continue
 
 		attack_types = attacks.map(i => typeNames[i]).join(", ")
-		tally = {}
-		// https://stackoverflow.com/questions/6600868/set-default-value-of-javascript-object-attributes
-		heels = {}; let heelsproxy = new Proxy(heels, listdefault);
+		tally = { 4:0, 2:0, 1:0, 0.5:0, 0.25:0, 0:0 }
+		heels = []
 
-		for (const [types, effect] of defenderSequence){
-			// Skip levitate defenders if attacks doesn't include ground.
-			if (!attacks.includes(4) && types.endsWith("(Levitate)")) break
+		for (const [bonusResist, typesDefense] of defenderSequences) {
+		  switch (bonusResist) {
+			case "Regular":
+				// Normal type effectiveness.
+				tallyDefenders(attacks, typesDefense, tally, heels, true)
 
-			best = attacks.reduce((a, b) => Math.max(a, effect[b]), 0)
-			// Not using the Proxy because it's way too slow.
-			if (!Object.hasOwn(tally, best))
-				tally[best] = 0
-			tally[best] += 1
+			case "Thick Fat":
+				// The only ability resisting two types.
+				if (attacks.includes(typeNames.indexOf("Fire")) || attacks.includes(typeNames.indexOf("Ice")))
+					tallyDefenders(attacks, typesDefense, tally, heels, false)
 
-			if (best < 1)
-				heelsproxy[best].push(types)
-		}
+			default:
+				// Only consider a defensive ability if it might counter one of our attacks.
+				if (attacks.includes(typeNames.indexOf(bonusResist)))
+					tallyDefenders(attacks, typesDefense, tally, heels, false)
+		}}
 
 		results.push([attack_types, tally, heels])
 	}
 
+	function tallyDefenders(attacks, defenses, tally, heels, shouldCountGood) {
+		for (const [types, effect] of defenses){
+			best = attacks.reduce((a, b) => Math.max(a, effect[b]), 0)
+
+			if (shouldCountGood && best >= 1)
+				// Only tally the negative impact of abilities,
+				// so as to not inflate the positive stats when the ability
+				// makes no difference (because we have coverage).
+				tally[best]++
+
+			if (best < 1){
+				tally[best]++
+				heels.push(types)
+			}
+		}
+	}
+
 	// Sorting by effectiveness count
-	function getOrZero(x, i) { return x.hasOwnProperty(i) ? x[i] : 0 }
 	function get(i) {
-		return (a, b) => getOrZero(a[1], i) - getOrZero(b[1], i)
+		return (a, b) => a[1][i] - b[1][i]
 	}
 
 	// The most super-effective. Sum 2x and 4x. Negate for descending order.
@@ -82,7 +108,7 @@ const titleCase = str => str[0].toUpperCase() + str.slice(1).toLowerCase()
 
 function intify(stringlist) {
 	if (!stringlist) return stringlist
-	return stringlist.map(str => typeNames.indexOf(titleCase(str)))
+	return stringlist.map(str => typeNames.indexOf(str))
 }
 
 function anyin(these, those) {
@@ -98,14 +124,4 @@ function allin(these, those) {
 			return false
 	}
 	return true
-}
-const intdefault = {
-	get: function(map, key) {
-		return map.hasOwnProperty(key) ? map[key] : 0;
-	}
-}
-const listdefault = {
-	get: function(map, key) {
-		return map.hasOwnProperty(key) ? map[key] : map[key] = new Array(), map[key];
-	}
 }

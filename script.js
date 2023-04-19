@@ -1,12 +1,13 @@
 import { calcBestEffectiveness } from "./calculate.js"
 
-const effectSymbol = { 4:4, 2:2, 1:1, 0.5:"½", 0.25:"¼" }
-const effectClass = { 4:"four", 2:"two", 1:"one", 0.5:"half", 0.25:"quarter" }
+const effectSymbol = { 4:4, 2:2, 1:1, 0.5:"½", 0.25:"¼", 0:0 }
+const effectClass = { 4:"four", 2:"two", 1:"one", 0.5:"half", 0.25:"quarter", 0:"zero" }
 
 const shouldInclude = document.getElementById("includeTypes")?.children
 const shouldExclude = document.getElementById("excludeTypes")?.children
 const countButtons = document.getElementsByClassName("countButton")
 const table = document.querySelector("tbody")
+const loadMoreButton = document.getElementById("loadMore")
 
 const newChild = (node, child) => node.appendChild(document.createElement(child))
 
@@ -58,25 +59,43 @@ function main() {
 		update()
 	})
 
-	countButtons[1].classList.add("active")
+	countButtons[moveCount - 1].classList.add("active")
 	update()
+
+	loadMoreButton?.addEventListener("click", () => {
+		length += 10
+		printTable()
+	})
 }
 
 
-let moveCount = 2,
-	doInclude = {a: []},
-	doExclude = {a: []}
+let moveCount = 2
+let doInclude = {a: []}
+let doExclude = {a: []}
+
+let sauce
+let i = 0
+let length = 10
 
 function update() {
-	if (table === null) return
-
-	while (table.firstChild) {
+	while (table?.firstChild) {
 		table.removeChild(table.firstChild);
 	}
-	let sauce = calcBestEffectiveness(moveCount, doExclude.a, doInclude.a)
-	let length = Math.min(10, sauce.length)
+	loadMoreButton?.removeAttribute("hidden")
+	i = 0
+	length = 10
+	sauce = calcBestEffectiveness(moveCount, doExclude.a, doInclude.a)
 
-	for (let i=0; i<length; i++) {
+	printTable()
+}
+
+function printTable() {
+	if (length > sauce.length) {
+		loadMoreButton?.setAttribute("hidden", "")
+		length = Math.min(length, sauce.length)
+	}
+
+	for (i; i<length; i++) {
 		const [types, profile, heels] = sauce[i]
 
 		let row = newChild(table, "tr")
@@ -89,11 +108,11 @@ function update() {
 		let subtable = newChild(newChild(effectCell, "table"), "tbody")
 		subtable.parentNode.classList.add("subtable")
 
-		let barheight = 0
-		for (const effect of [4,2,1,0.5,0.25]) {
-			if (!(profile.hasOwnProperty(effect))) continue
+		let barCount = 0
+		for (const effect of [4,2,1,0.5,0.25,0]) {
+			if (profile[effect] == 0) continue
 
-			barheight += 1
+			barCount += 1
 
 			let row = newChild(subtable, "tr")
 			let multi = newChild(row, "td")
@@ -112,13 +131,10 @@ function update() {
 		weaknessCell.classList.add("bigrow")
 		let weaknessText = newChild(weaknessCell, "div")
 		weaknessText.classList.add("smallcell")
-		weaknessText.setAttribute("style", `height: ${barheight * 19}px;`)
-		for (const effect of [0.5, 0.25, 0]) {
-			if (!(heels.hasOwnProperty(effect))) continue
+		weaknessText.setAttribute("style", `height: ${barCount * 19}px;`)
 
-			for (const weakness of heels[effect]){
-				weaknessText.innerHTML += weakness + " <br>"
-			}
+		for (const weakness of heels){
+			weaknessText.innerHTML += weakness + " <br>"
 		}
 	}
 }
