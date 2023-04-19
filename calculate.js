@@ -2,7 +2,7 @@ export { calcBestEffectiveness }
 
 const TYPECOUNT = 18
 const typeNames = ["Normal", "Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark", "Fairy"]
-const defenders = await fetch("defenders_2.json").then(response => response.json())
+const defenders = await fetch("defenders.json").then(response => response.json())
 // Transform the hashmaps into arrays for faster iteration.
 const defenderSequences = Object.entries(defenders).map(
 	stuff => {
