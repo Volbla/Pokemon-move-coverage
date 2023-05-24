@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Coverage calculator</title>
+	<title>Pokemon Coverage calculator</title>
 	<meta name="viewport" content="width=604" />
 
 	<script src="script.js" type="module"></script>
@@ -41,6 +41,9 @@
 			margin: 0px auto;
 		}
 
+		h1 {
+			margin: 0px;
+		}
 		button {
 			border: 1px solid black;
 			border-radius: 3px;
@@ -129,11 +132,67 @@
 		div.zero { background: #000 }
 	</style>
 
+	<style>
+		details {
+			font-size: 80%;
+			margin-bottom: 10px;
+		}
+		summary {
+			text-decoration: underline;
+			margin-bottom: 3px;
+		}
+		details>div {
+			margin: 0 auto;
+			width: 400px;
+			text-align: left;
+			padding: 4px;
+			border: 1px solid gray;
+			border-radius: 3px;
+			background-color: #f8f8f8;
+		}
+		ul {
+			margin: 0;
+			padding-left: 20px;
+		}
+	</style>
+
 </head>
 
 <body>
 	<div id="head">
 	<div class="center">
+		<h1>Coverage Calculator</h1>
+		<details>
+			<summary>What is this?</summary>
+			<div>
+				<p style="margin-top: 0;">
+					This tool is meant to help people building pokemon teams
+					to figure out what move coverage they might need. It compares
+					a set of attacking moves against all defensive profiles
+					in the games. The most effective move gets tallied, and
+					the result is summarized in a list.
+				</p>
+				<p style="margin: 0;">
+					The list is sorted by (in order of importance):
+					<ul>
+						<li>The fewest immune targets.</li>
+						<li>The fewest quad-resists.</li>
+						<li>The fewest half-resists.</li>
+						<li>The most supereffective targets (including both 2× and 4×)</li>
+					</ul>
+				</p>
+				<p>
+					Abilities that give resistances or immunities are only tallied
+					when a set of attacks can't hit it for at least neutral damage.
+				</p>
+				<p style="margin-bottom: 0;">
+					The attacking moves can be filtered by selecting which types to
+					always include (e.g. a STAB-move) or to exclude (e.g. when a pokemon
+					doesn't learn a move of that type).
+				</p>
+			</div>
+		</details>
+
 		<div class="center">
 			Number of attacking moves<br>
 			<button class="countButton">1</button>
@@ -194,8 +253,8 @@
 	</div>
 	</div>
 
-	<div id="main">
-	<table class="center">
+	<div id="main" class="center">
+	<table>
 		<thead>
 			<tr>
 				<th>Attacking types</th>
