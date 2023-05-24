@@ -4,19 +4,21 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Coverage calculator</title>
+	<meta name="viewport" content="width=604" />
+
 	<script src="script.js" type="module"></script>
 
 	<style>
 		/* How to make the head's background cover the full width,
 		while not shifting any content around when the scrollbar toggles. */
-		html, body {
+		/* html, body {
 			height: 100%;
 			overflow: auto;
 			overflow-x: hidden;
 		}
 		#head, #main {
 			width: 100vw;
-		}
+		} */
 		/* Wtf is that. */
 
 		body {
@@ -29,16 +31,14 @@
 			background-color: aliceblue;
 		}
 		#head, #main {
-			padding-top: 8px;
-			padding-bottom: 8px;
+			padding: 8px 0px;
 		}
 		#main {
 			margin-bottom: 40px;
 		}
 		.center {
 			width: fit-content;
-			margin-left: auto;
-			margin-right: auto;
+			margin: 0px auto;
 		}
 
 		button {
