@@ -131,7 +131,8 @@ function printTable() {
 		weaknessCell.classList.add("bigrow")
 		let weaknessText = newChild(weaknessCell, "div")
 		weaknessText.classList.add("smallcell")
-		weaknessText.setAttribute("style", `height: ${barCount * 19}px;`)
+		// Why did i do this here?
+		// weaknessText.setAttribute("style", `height: ${barCount * 19}px;`)
 
 		for (const weakness of heels){
 			weaknessText.innerHTML += weakness + " <br>"
