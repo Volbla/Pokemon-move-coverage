@@ -20,9 +20,6 @@ const newChild = (node, child) => node.appendChild(document.createElement(child)
 
 
 function main() {
-	if (shouldInclude == undefined) return
-	if (shouldExclude == undefined) return
-
 	for (const button of moveCountButtons) {
 		button.addEventListener("click", () => {
 			button.parentElement?.querySelector("button.active")?.classList.remove("active")
@@ -85,7 +82,7 @@ let tableLength = 10
 let i = 0
 
 function update() {
-	while (table?.firstChild) {
+	while (table.firstChild) {
 		table.removeChild(table.firstChild);
 	}
 	loadMoreButton?.removeAttribute("hidden")
@@ -98,54 +95,50 @@ function update() {
 
 function printTable() {
 	if (tableLength >= effectivenessResults.length) {
-		loadMoreButton?.setAttribute("hidden", "")
+		loadMoreButton.setAttribute("hidden", "")
 		tableLength = effectivenessResults.length
 	}
 
 	for (i; i < tableLength; i++) {
 		const [attackTypes, effectTally, resistants] = effectivenessResults[i]
 
-		let row = newChild(table, "tr")
+		let row = table.insertRow()
 		row.classList.add("bigrow")
 
 		// Moves
-		let typeCell = newChild(row, "td")
-		typeCell.innerHTML = attackTypes
+		let typeCell = row.insertCell()
+		typeCell.textContent = attackTypes
 
 		// Effect tally
-		let effectCell = newChild(row, "td")
-		let subtable = newChild(newChild(effectCell, "table"), "tbody")
-		subtable.parentNode.classList.add("subtable")
+		let effectCell = row.insertCell()
+		let subtable = newChild(effectCell, "tbody")
+		subtable.classList.add("subtable")
 
 		for (const effect of [4,2,1,0.5,0.25,0]) {
 			if (effectTally[effect] == 0) continue
 
-			let row = newChild(subtable, "tr")
-			let multiplier = newChild(row, "td")
-			multiplier.innerHTML = `${effectSymbol[effect]}×`
+			let effectRow = subtable.insertRow()
+			let multiplier = effectRow.insertCell()
 			multiplier.classList.add("multiplier")
+			multiplier.textContent = `${effectSymbol[effect]}×`
 
-			let value = newChild(row, "td")
+			let value = effectRow.insertCell()
 			let bar = newChild(value, "div")
+			bar.classList.add("bar", effectClass[effect])
 			bar.setAttribute("style", `width: ${effectTally[effect]}px`)
-			bar.classList.add("bar")
-			bar.classList.add(effectClass[effect])
 			value.append(` ${effectTally[effect]}`)
 		}
 
-		let height = subtable.offsetHeight
-
 		// Resistant targets
-		let weaknessCell = newChild(row, "td")
-		let weaknessText = newChild(weaknessCell, "div")
-		weaknessText.classList.add("boundedCell")
-		// Dynamically set the row height to the size of the effectCell.
-		weaknessText.setAttribute("style", `height: ${height}px;`)
+		let weaknessCell = row.insertCell()
+		let weaknessList = newChild(weaknessCell, "ul")
+		weaknessList.classList.add("boundedCell")
+		// Set height the same as the effectCell so the row doesn't grow without bounds.
+		weaknessList.setAttribute("style", `height: ${subtable.offsetHeight}px;`)
 
 		for (const weakness of resistants){
-			weaknessText.innerHTML += weakness + "<br>"
-			// let item = newChild(weaknessText, "li")
-			// item.innerHTML = weakness
+			let listItem = newChild(weaknessList, "li")
+			listItem.textContent = weakness
 		}
 	}
 }
