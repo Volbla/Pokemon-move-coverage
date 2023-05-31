@@ -1,11 +1,18 @@
 import { calcBestEffectiveness } from "./calculate.js"
 
 const effectSymbol = { 4:4, 2:2, 1:1, 0.5:"½", 0.25:"¼", 0:0 }
-const effectClass = { 4:"four", 2:"two", 1:"one", 0.5:"half", 0.25:"quarter", 0:"zero" }
+const effectClass = {
+	4:"timesFour",
+	2:"timesTwo",
+	1:"timesOne",
+	0.5:"timesHalf",
+	0.25:"timesQuarter",
+	0:"timesZero"
+}
 
 const shouldInclude = document.getElementById("includeTypes")?.children
 const shouldExclude = document.getElementById("excludeTypes")?.children
-const countButtons = document.getElementsByClassName("countButton")
+const moveCountButtons = document.getElementsByClassName("countButton")
 const table = document.querySelector("tbody")
 const loadMoreButton = document.getElementById("loadMore")
 
@@ -16,7 +23,7 @@ function main() {
 	if (shouldInclude == undefined) return
 	if (shouldExclude == undefined) return
 
-	for (const button of countButtons) {
+	for (const button of moveCountButtons) {
 		button.addEventListener("click", () => {
 			button.parentElement?.querySelector("button.active")?.classList.remove("active")
 			button.classList.add("active")
@@ -59,11 +66,11 @@ function main() {
 		update()
 	})
 
-	countButtons[moveCount - 1].classList.add("active")
+	moveCountButtons[moveCount - 1].classList.add("active")
 	update()
 
 	loadMoreButton?.addEventListener("click", () => {
-		length += 10
+		tableLength += 10
 		printTable()
 	})
 }
@@ -73,9 +80,9 @@ let moveCount = 2
 let doInclude = {a: []}
 let doExclude = {a: []}
 
-let sauce
+let effectivenessResults
+let tableLength = 10
 let i = 0
-let length = 10
 
 function update() {
 	while (table?.firstChild) {
@@ -83,59 +90,62 @@ function update() {
 	}
 	loadMoreButton?.removeAttribute("hidden")
 	i = 0
-	length = 10
-	sauce = calcBestEffectiveness(moveCount, doExclude.a, doInclude.a)
+	tableLength = 10
+	effectivenessResults = calcBestEffectiveness(moveCount, doExclude.a, doInclude.a)
 
 	printTable()
 }
 
 function printTable() {
-	if (length > sauce.length) {
+	if (tableLength >= effectivenessResults.length) {
 		loadMoreButton?.setAttribute("hidden", "")
-		length = Math.min(length, sauce.length)
+		tableLength = effectivenessResults.length
 	}
 
-	for (i; i<length; i++) {
-		const [types, profile, heels] = sauce[i]
+	for (i; i < tableLength; i++) {
+		const [attackTypes, effectTally, resistants] = effectivenessResults[i]
 
 		let row = newChild(table, "tr")
-		let typeCell = newChild(row, "td")
-		typeCell.innerHTML = types
-		typeCell.classList.add("bigrow")
+		row.classList.add("bigrow")
 
+		// Moves
+		let typeCell = newChild(row, "td")
+		typeCell.innerHTML = attackTypes
+
+		// Effect tally
 		let effectCell = newChild(row, "td")
-		effectCell.classList.add("bigrow")
 		let subtable = newChild(newChild(effectCell, "table"), "tbody")
 		subtable.parentNode.classList.add("subtable")
 
-		let barCount = 0
 		for (const effect of [4,2,1,0.5,0.25,0]) {
-			if (profile[effect] == 0) continue
-
-			barCount += 1
+			if (effectTally[effect] == 0) continue
 
 			let row = newChild(subtable, "tr")
-			let multi = newChild(row, "td")
-			multi.innerHTML = `${effectSymbol[effect]}×`
-			multi.classList.add("multi")
+			let multiplier = newChild(row, "td")
+			multiplier.innerHTML = `${effectSymbol[effect]}×`
+			multiplier.classList.add("multiplier")
 
 			let value = newChild(row, "td")
 			let bar = newChild(value, "div")
-			bar.setAttribute("style", `width: ${profile[effect]}px`)
+			bar.setAttribute("style", `width: ${effectTally[effect]}px`)
 			bar.classList.add("bar")
 			bar.classList.add(effectClass[effect])
-			value.append(` ${profile[effect]}`)
+			value.append(` ${effectTally[effect]}`)
 		}
 
-		let weaknessCell = newChild(row, "td")
-		weaknessCell.classList.add("bigrow")
-		let weaknessText = newChild(weaknessCell, "div")
-		weaknessText.classList.add("smallcell")
-		// Why did i do this here?
-		// weaknessText.setAttribute("style", `height: ${barCount * 19}px;`)
+		let height = subtable.offsetHeight
 
-		for (const weakness of heels){
-			weaknessText.innerHTML += weakness + " <br>"
+		// Resistant targets
+		let weaknessCell = newChild(row, "td")
+		let weaknessText = newChild(weaknessCell, "div")
+		weaknessText.classList.add("boundedCell")
+		// Dynamically set the row height to the size of the effectCell.
+		weaknessText.setAttribute("style", `height: ${height}px;`)
+
+		for (const weakness of resistants){
+			weaknessText.innerHTML += weakness + "<br>"
+			// let item = newChild(weaknessText, "li")
+			// item.innerHTML = weakness
 		}
 	}
 }

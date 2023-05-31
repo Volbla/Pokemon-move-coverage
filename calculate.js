@@ -3,7 +3,7 @@ export { calcBestEffectiveness }
 const TYPECOUNT = 18
 const typeNames = ["Normal", "Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark", "Fairy"]
 const defenders = await fetch("defenders.json").then(response => response.json())
-// Transform the hashmaps into arrays for faster iteration.
+// We only do linear iteration, so it's faster the turn the hashmap into an array.
 const defenderSequences = Object.entries(defenders).map(
 	stuff => {
 		const key = stuff[0]
@@ -36,7 +36,7 @@ function calcBestEffectiveness(count, exclude, include) {
 		for (const [bonusResist, typesDefense] of defenderSequences) {
 		  switch (bonusResist) {
 			case "Regular":
-				// Normal type effectiveness.
+				// No ability that affects resistances.
 				tallyDefenders(attacks, typesDefense, tally, heels, true)
 
 			case "Thick Fat":

@@ -27,13 +27,14 @@
 			background-color: white;
 			font-family: sans-serif;
 		}
-		#head {
+		header {
 			background-color: aliceblue;
-		}
-		#head, #main {
+			display: flex;
+			flex-direction: column;
 			padding: 8px 0px;
 		}
-		#main {
+		main {
+			padding: 8px 0px;
 			margin-bottom: 40px;
 		}
 		.center {
@@ -48,25 +49,22 @@
 			border: 1px solid black;
 			border-radius: 3px;
 			margin: 3px;
-		}
-		.countButton {
 			min-width: 3.2ch;
 		}
+		button.active {
+			outline: outset 3px #d5d819;
+		}
 
-		.flexcell {
-			margin: 0 15px;
+		.buttonPanel {
+			margin: 5px;
 		}
 		.typegrid {
 			display: grid;
 			grid-template-columns: repeat(4, 8.5ch);
 		}
 		.typegrid > button {
-			border: 1px solid black;
-			border-radius: 3px;
 			color: white;
-		}
-		button.active {
-			outline: outset 3px #d5d819;
+			text-shadow: 1px 1px black;
 		}
 
 		.type-normal { background:#A8A878; }
@@ -96,39 +94,39 @@
 		tbody {
 			text-align: left;
 		}
-		td.bigrow {
+		tr.bigrow {
 			border: none;
 			border-top: 1px solid gray;
+		}
+		tr.bigrow > td {
 			padding: 5px;
 		}
-		.subtable {
+		table.subtable {
 			width: 100%;
 			height: 100%;
 			font-size: 87%;
 			margin: 0;
 		}
-		.smallcell {
-			text-align: center;
-			font-size: 87%;
-			height: 6.5em;
-			color: gray;
-			overflow-y: auto;
-			scrollbar-gutter: stable both-edges;
-			padding: 0 5px;
-		}
-		.multi { text-align: center; }
-		.bar {
+		td.multiplier { text-align: center; }
+		div.bar {
 			border-radius: 3px;
 			height: 10px;
 			display: inline-block;
 		}
+		div.timesFour { background: #73d216 }
+		div.timesTwo { background: #4e9a06 }
+		div.timesOne { background: #ffdd57 }
+		div.timesHalf { background: #a40000 }
+		div.timesQuarter { background: #7c0000 }
+		div.timesZero { background: #000 }
 
-		div.four { background: #73d216 }
-		div.two { background: #4e9a06 }
-		div.one { background: #ffdd57 }
-		div.half { background: #a40000 }
-		div.quarter { background: #7c0000 }
-		div.zero { background: #000 }
+		.boundedCell {
+			text-align: center;
+			font-size: 87%;
+			color: gray;
+			overflow-y: auto;
+			scrollbar-gutter: stable both-edges;
+		}
 	</style>
 
 	<style>
@@ -150,7 +148,7 @@
 			border-radius: 3px;
 			background-color: #f8f8f8;
 		}
-		ul {
+		details>div>ul {
 			margin: 0;
 			padding-left: 20px;
 		}
@@ -159,107 +157,105 @@
 </head>
 
 <body>
-	<div id="head">
-	<div class="center">
-		<h1>Coverage Calculator</h1>
-		<details>
-			<summary>What is this?</summary>
-			<div>
-				<p style="margin-top: 0;">
-					This tool is meant to help people building pokemon teams
-					to figure out what move coverage they might need. It compares
-					a set of attacking moves against all defensive profiles
-					in the games. The most effective move gets tallied, and
-					the result is summarized in a list.
-				</p>
-				<p style="margin: 0;">
-					The list is sorted by (in order of importance):
-					<ul>
-						<li>The fewest immune targets.</li>
-						<li>The fewest quad-resists.</li>
-						<li>The fewest half-resists.</li>
-						<li>The most supereffective targets (including both 2× and 4×)</li>
-					</ul>
-				</p>
-				<p>
-					Abilities that give resistances or immunities are only tallied
-					when a set of attacks can't hit it for at least neutral damage.
-				</p>
-				<p style="margin-bottom: 0;">
-					The attacking moves can be filtered by selecting which types to
-					always include (e.g. a STAB-move) or to exclude (e.g. when a pokemon
-					doesn't learn a move of that type).
-				</p>
-			</div>
-		</details>
-
-		<div class="center">
-			Number of attacking moves<br>
-			<button class="countButton">1</button>
-			<button class="countButton">2</button>
-			<button class="countButton">3</button>
-			<button class="countButton">4</button>
+<header>
+	<h1>Coverage Calculator</h1>
+	<details>
+		<summary>What is this?</summary>
+		<div>
+			<p style="margin-top: 0;">
+				This tool is meant to help people building pokemon teams
+				to figure out what move coverage they might need. It compares
+				a set of attacking moves against all defensive profiles
+				in the games. The most effective move gets tallied, and
+				the result is summarized in a list.
+			</p>
+			<p style="margin: 0;">
+				The list is sorted by (in order of importance):
+			</p>
+			<ul>
+				<li>The fewest immune targets.</li>
+				<li>The fewest quad-resists.</li>
+				<li>The fewest half-resists.</li>
+				<li>The most supereffective targets (including both 2× and 4×)</li>
+			</ul>
+			<p>
+				Abilities that give resistances or immunities are only tallied
+				when a set of attacks can't hit it for at least neutral damage.
+			</p>
+			<p style="margin-bottom: 0;">
+				The attacking moves can be filtered by selecting which types to
+				always include (e.g. a STAB-move) or to exclude (e.g. when a pokemon
+				doesn't learn a move of that type).
+			</p>
 		</div>
-		<div style="display: inline-flex;">
-			<div class="flexcell">
-				Include these types
-				<div id="includeTypes" class="typegrid">
-					<button class="type-normal">Normal</button>
-					<button class="type-fighting">Fighting</button>
-					<button class="type-flying">Flying</button>
-					<button class="type-poison">Poison</button>
-					<button class="type-ground">Ground</button>
-					<button class="type-rock">Rock</button>
-					<button class="type-bug">Bug</button>
-					<button class="type-ghost">Ghost</button>
-					<button class="type-steel">Steel</button>
-					<button class="type-fire">Fire</button>
-					<button class="type-water">Water</button>
-					<button class="type-grass">Grass</button>
-					<button class="type-electric">Electric</button>
-					<button class="type-psychic">Psychic</button>
-					<button class="type-ice">Ice</button>
-					<button class="type-dragon">Dragon</button>
-					<button class="type-dark">Dark</button>
-					<button class="type-fairy">Fairy</button>
-				</div>
-				<button id="includeReset">reset</button>
+	</details>
+
+	<div>
+		Number of attacking moves<br>
+		<button class="countButton">1</button>
+		<button class="countButton">2</button>
+		<button class="countButton">3</button>
+		<button class="countButton">4</button>
+	</div>
+	<div style="display: flex; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+		<div class="buttonPanel">
+			Include these types
+			<div id="includeTypes" class="typegrid">
+				<button class="type-normal">Normal</button>
+				<button class="type-fighting">Fighting</button>
+				<button class="type-flying">Flying</button>
+				<button class="type-poison">Poison</button>
+				<button class="type-ground">Ground</button>
+				<button class="type-rock">Rock</button>
+				<button class="type-bug">Bug</button>
+				<button class="type-ghost">Ghost</button>
+				<button class="type-steel">Steel</button>
+				<button class="type-fire">Fire</button>
+				<button class="type-water">Water</button>
+				<button class="type-grass">Grass</button>
+				<button class="type-electric">Electric</button>
+				<button class="type-psychic">Psychic</button>
+				<button class="type-ice">Ice</button>
+				<button class="type-dragon">Dragon</button>
+				<button class="type-dark">Dark</button>
+				<button class="type-fairy">Fairy</button>
 			</div>
-			<div class="flexcell">
-				Exclude these types
-				<div id="excludeTypes" class="typegrid">
-					<button class="type-normal">Normal</button>
-					<button class="type-fighting">Fighting</button>
-					<button class="type-flying">Flying</button>
-					<button class="type-poison">Poison</button>
-					<button class="type-ground">Ground</button>
-					<button class="type-rock">Rock</button>
-					<button class="type-bug">Bug</button>
-					<button class="type-ghost">Ghost</button>
-					<button class="type-steel">Steel</button>
-					<button class="type-fire">Fire</button>
-					<button class="type-water">Water</button>
-					<button class="type-grass">Grass</button>
-					<button class="type-electric">Electric</button>
-					<button class="type-psychic">Psychic</button>
-					<button class="type-ice">Ice</button>
-					<button class="type-dragon">Dragon</button>
-					<button class="type-dark">Dark</button>
-					<button class="type-fairy">Fairy</button>
-				</div>
-				<button id="excludeReset">reset</button>
+			<button id="includeReset">reset</button>
+		</div>
+		<div class="buttonPanel">
+			Exclude these types
+			<div id="excludeTypes" class="typegrid">
+				<button class="type-normal">Normal</button>
+				<button class="type-fighting">Fighting</button>
+				<button class="type-flying">Flying</button>
+				<button class="type-poison">Poison</button>
+				<button class="type-ground">Ground</button>
+				<button class="type-rock">Rock</button>
+				<button class="type-bug">Bug</button>
+				<button class="type-ghost">Ghost</button>
+				<button class="type-steel">Steel</button>
+				<button class="type-fire">Fire</button>
+				<button class="type-water">Water</button>
+				<button class="type-grass">Grass</button>
+				<button class="type-electric">Electric</button>
+				<button class="type-psychic">Psychic</button>
+				<button class="type-ice">Ice</button>
+				<button class="type-dragon">Dragon</button>
+				<button class="type-dark">Dark</button>
+				<button class="type-fairy">Fairy</button>
 			</div>
+			<button id="excludeReset">reset</button>
 		</div>
 	</div>
-	</div>
+</header>
 
-	<div id="main" class="center">
-	<table>
+<main>
+	<table class="center">
 		<thead>
 			<tr>
-				<th>Attacking types</th>
-				<th>Best effect tally</th>
-				<th>Resistant targets</th>
+				<th scope="col">Attacking types</th>
+				<th scope="col">Best effect tally</th>
+				<th scope="col">Resistant targets</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -267,6 +263,6 @@
 		</tbody>
 	</table>
 	<button id="loadMore">Load more</button>
-	</div>
+</main>
 </body>
 </html>
