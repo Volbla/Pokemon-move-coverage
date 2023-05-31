@@ -10,8 +10,8 @@ const effectClass = {
 	0:"timesZero"
 }
 
-const shouldInclude = document.getElementById("includeTypes")?.children
-const shouldExclude = document.getElementById("excludeTypes")?.children
+const shouldInclude = document.getElementById("includeTypes").children
+const shouldExclude = document.getElementById("excludeTypes").children
 const moveCountButtons = document.getElementsByClassName("countButton")
 const table = document.querySelector("tbody")
 const loadMoreButton = document.getElementById("loadMore")
@@ -22,7 +22,7 @@ const newChild = (node, child) => node.appendChild(document.createElement(child)
 function main() {
 	for (const button of moveCountButtons) {
 		button.addEventListener("click", () => {
-			button.parentElement?.querySelector("button.active")?.classList.remove("active")
+			button.parentElement.querySelector("button.active").classList.remove("active")
 			button.classList.add("active")
 			moveCount = parseInt(button.innerHTML)
 			update()
@@ -50,13 +50,13 @@ function main() {
 	for (const button of shouldExclude)
 		button.addEventListener("click", typeButton(doExclude))
 
-	document.getElementById("includeReset")?.addEventListener("click", () => {
+	document.getElementById("includeReset").addEventListener("click", () => {
 		for (const button of shouldInclude)
 			button.classList.remove("active")
 		doInclude.a.splice(0)
 		update()
 	})
-	document.getElementById("excludeReset")?.addEventListener("click", () => {
+	document.getElementById("excludeReset").addEventListener("click", () => {
 		for (const button of shouldExclude)
 			button.classList.remove("active")
 		doExclude.a.splice(0)
@@ -66,7 +66,7 @@ function main() {
 	moveCountButtons[moveCount - 1].classList.add("active")
 	update()
 
-	loadMoreButton?.addEventListener("click", () => {
+	loadMoreButton.addEventListener("click", () => {
 		tableLength += 10
 		printTable()
 	})
@@ -85,7 +85,7 @@ function update() {
 	while (table.firstChild) {
 		table.removeChild(table.firstChild);
 	}
-	loadMoreButton?.removeAttribute("hidden")
+	loadMoreButton.removeAttribute("hidden")
 	i = 0
 	tableLength = 10
 	effectivenessResults = calcBestEffectiveness(moveCount, doExclude.a, doInclude.a)
