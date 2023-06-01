@@ -38,16 +38,19 @@ function calcBestEffectiveness(count, exclude, include) {
 			case "Regular":
 				// No ability that affects resistances.
 				tallyDefenders(attacks, typesDefense, tally, heels, true)
+				break
 
 			case "Thick Fat":
 				// The only ability resisting two types.
 				if (attacks.includes(typeNames.indexOf("Fire")) || attacks.includes(typeNames.indexOf("Ice")))
 					tallyDefenders(attacks, typesDefense, tally, heels, false)
+				break
 
 			default:
 				// Only consider a defensive ability if it might counter one of our attacks.
 				if (attacks.includes(typeNames.indexOf(bonusResist)))
 					tallyDefenders(attacks, typesDefense, tally, heels, false)
+				break
 		}}
 
 		results.push([attack_types, tally, heels])
