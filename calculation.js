@@ -13,23 +13,23 @@ const defenderSequences = Object.entries(defenders).map(
 )
 
 
-function calcBestEffectiveness(count, exclude, include) {
+function calcBestEffectiveness(moveCount, excludeTypes, includeTypes) {
 	// [0, 1, 2,...]
-	let attacks = Array.from({ length: count }, (_, i) => i)
+	let attacks = Array.from({ length: moveCount }, (_, i) => i)
 	let results = []
-	let attack_types, tally, heels, best
+	let attackTypes, tally, heels, strongest
 
-	exclude = intify(exclude)
-	include = intify(include)
+	excludeTypes = intify(excludeTypes)
+	includeTypes = intify(includeTypes)
 
 
-	for (attacks; attacks[0] <= TYPECOUNT - count; nextCombination(attacks)) {
-		if (exclude && anyin(exclude, attacks))
+	for (attacks; attacks[0] <= TYPECOUNT - moveCount; nextCombination(attacks)) {
+		if (excludeTypes && anyin(excludeTypes, attacks))
 			continue
-		if (include && !allin(include, attacks))
+		if (includeTypes && !allin(includeTypes, attacks))
 			continue
 
-		attack_types = attacks.map(i => typeNames[i]).join(", ")
+		attackTypes = attacks.map(i => typeNames[i]).join(", ")
 		tally = { 4:0, 2:0, 1:0, 0.5:0, 0.25:0, 0:0 }
 		heels = []
 
@@ -53,21 +53,21 @@ function calcBestEffectiveness(count, exclude, include) {
 				break
 		}}
 
-		results.push([attack_types, tally, heels])
+		results.push([attackTypes, tally, heels])
 	}
 
 	function tallyDefenders(attacks, defenses, tally, heels, shouldCountGood) {
 		for (const [types, effect] of defenses){
-			best = attacks.reduce((a, b) => Math.max(a, effect[b]), 0)
+			strongest = attacks.reduce((a, b) => Math.max(a, effect[b]), 0)
 
-			if (shouldCountGood && best >= 1)
+			if (shouldCountGood && strongest >= 1)
 				// Only tally the negative impact of abilities,
 				// so as to not inflate the positive stats when the ability
 				// makes no difference (because we have coverage).
-				tally[best]++
+				tally[strongest]++
 
-			if (best < 1){
-				tally[best]++
+			if (strongest < 1){
+				tally[strongest]++
 				heels.push(types)
 			}
 		}
@@ -81,9 +81,11 @@ function calcBestEffectiveness(count, exclude, include) {
 	// The most super-effective. Sum 2x and 4x. Negate for descending order.
 	results.sort((a, b) => -(get(2)(a, b) + get(4)(a, b)))
 	// The fewest weak or non-effective
-	for (const bad of [0.5, 0.25, 0]){
-		results.sort(get(bad))
-	}
+	// for (const bad of [0.5, 0.25, 0]){
+	// 	results.sort(get(bad))
+	// }
+	// results.sort( (a, b) => get(0.5)(a, b) + get(0.25)(a, b) + get(0)(a, b) )
+	results.sort( (a, b) => [0.5, 0.25, 0].reduce((c, d) => c + get(d)(a, b), 0) )
 
 	return results
 }
@@ -107,7 +109,6 @@ function nextCombination(array) {
 	}
 }
 
-const titleCase = str => str[0].toUpperCase() + str.slice(1).toLowerCase()
 
 function intify(stringlist) {
 	if (!stringlist) return stringlist
