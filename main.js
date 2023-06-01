@@ -157,48 +157,6 @@ function printTable() {
 		// Set height the same as the effectCell so the row doesn't grow without bounds.
 		weaknessList.setAttribute("style", `height: ${subtable.offsetHeight}px;`)
 	}
-
-	// Old method of table population. Is there a difference? Idk.
-
-	// for (i; i < tableLength; i++) {
-	// 	const [attackTypes, effectTally, resistants] = effectivenessResults[i]
-
-	// 	let row = table.insertRow()
-	// 	row.classList.add("bigrow")
-
-	// 	// Moves
-	// 	row.insertCell().textContent = attackTypes
-
-	// 	// Effect tally
-	// 	let subtable = newChild(row.insertCell(), "tbody")
-	// 	subtable.classList.add("subtable")
-
-	// 	for (const effect of [4,2,1,0.5,0.25,0]) {
-	// 		if (effectTally[effect] == 0) continue
-
-	// 		let effectRow = subtable.insertRow()
-
-	// 		let multiplier = effectRow.insertCell()
-	// 		multiplier.classList.add("multiplier")
-	// 		multiplier.textContent = `${effectSymbol[effect]}×`
-
-	// 		let bar = newChild(effectRow.insertCell(), "div")
-	// 		bar.classList.add("bar", effectClass[effect])
-	// 		bar.setAttribute("style", `width: ${effectTally[effect]}px`)
-	// 		bar.after(` ${effectTally[effect]}`)
-	// 	}
-
-	// 	// Resistant targets
-	// 	let weaknessList = newChild(row.insertCell(), "ul")
-	// 	weaknessList.classList.add("boundedCell")
-	// 	// Set height the same as the effectCell so the row doesn't grow without bounds.
-	// 	weaknessList.setAttribute("style", `height: ${subtable.offsetHeight}px;`)
-
-	// 	for (const weakness of resistants){
-	// 		let listItem = newChild(weaknessList, "li")
-	// 		listItem.textContent = weakness
-	// 	}
-	// }
 }
 
 
