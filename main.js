@@ -1,4 +1,4 @@
-import { calcBestEffectiveness } from "./calculate.js"
+import { calcBestEffectiveness } from "./calculation.js"
 
 const effectSymbol = { 4:4, 2:2, 1:1, 0.5:"½", 0.25:"¼", 0:0 }
 const effectClass = {
