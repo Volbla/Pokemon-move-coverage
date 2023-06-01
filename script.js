@@ -16,7 +16,27 @@ const moveCountButtons = document.getElementsByClassName("countButton")
 const table = document.querySelector("tbody")
 const loadMoreButton = document.getElementById("loadMore")
 
-const newChild = (node, child) => node.appendChild(document.createElement(child))
+function newChild(node, child) {
+	return node.appendChild(document.createElement(child))
+}
+
+function templateRow() {
+	let therow = document.createElement("tr")
+	therow.classList.add("bigrow")
+	therow.insertCell()
+	newChild(therow.insertCell(), "tbody").classList.add("subtable")
+	newChild(therow.insertCell(), "ul").classList.add("boundedCell")
+
+	return therow
+}
+
+function templateBar() {
+	let thisrow = document.createElement("tr")
+	thisrow.insertCell().classList.add("multiplier")
+	newChild(thisrow.insertCell(), "div").classList.add("bar")
+
+	return thisrow
+}
 
 
 function main() {
@@ -25,7 +45,7 @@ function main() {
 			button.parentElement.querySelector("button.active").classList.remove("active")
 			button.classList.add("active")
 			moveCount = parseInt(button.innerHTML)
-			update()
+			updateTable()
 		})
 	}
 	function typeButton(listVariable) { return event => {
@@ -42,7 +62,7 @@ function main() {
 			button.classList.add("active")
 		}
 
-		update()
+		updateTable()
 	}}
 
 	for (const button of shouldInclude)
@@ -54,17 +74,17 @@ function main() {
 		for (const button of shouldInclude)
 			button.classList.remove("active")
 		doInclude.a.splice(0)
-		update()
+		updateTable()
 	})
 	document.getElementById("excludeReset").addEventListener("click", () => {
 		for (const button of shouldExclude)
 			button.classList.remove("active")
 		doExclude.a.splice(0)
-		update()
+		updateTable()
 	})
 
 	moveCountButtons[moveCount - 1].classList.add("active")
-	update()
+	updateTable()
 
 	loadMoreButton.addEventListener("click", () => {
 		tableLength += 10
@@ -81,7 +101,8 @@ let effectivenessResults
 let tableLength = 10
 let i = 0
 
-function update() {
+
+function updateTable() {
 	while (table.firstChild) {
 		table.removeChild(table.firstChild);
 	}
@@ -93,6 +114,7 @@ function update() {
 	printTable()
 }
 
+
 function printTable() {
 	if (tableLength >= effectivenessResults.length) {
 		loadMoreButton.setAttribute("hidden", "")
@@ -102,37 +124,32 @@ function printTable() {
 	for (i; i < tableLength; i++) {
 		const [attackTypes, effectTally, resistants] = effectivenessResults[i]
 
-		let row = table.insertRow()
-		row.classList.add("bigrow")
+		let row = templateRow()
+		let [movesCell, effectCell, weaknessCell] = row.children
+		let subtable = effectCell.querySelector("tbody")
+		let weaknessList = weaknessCell.querySelector("ul")
 
 		// Moves
-		let typeCell = row.insertCell()
-		typeCell.textContent = attackTypes
+		movesCell.textContent = attackTypes
 
 		// Effect tally
-		let effectCell = row.insertCell()
-		let subtable = newChild(effectCell, "tbody")
-		subtable.classList.add("subtable")
-
 		for (const effect of [4,2,1,0.5,0.25,0]) {
 			if (effectTally[effect] == 0) continue
 
-			let effectRow = subtable.insertRow()
-			let multiplier = effectRow.insertCell()
-			multiplier.classList.add("multiplier")
-			multiplier.textContent = `${effectSymbol[effect]}×`
+			let effectRow = subtable.appendChild(templateBar())
 
-			let value = effectRow.insertCell()
-			let bar = newChild(value, "div")
-			bar.classList.add("bar", effectClass[effect])
+			effectRow.firstElementChild.textContent = `${effectSymbol[effect]}×`
+
+			let bar = effectRow.querySelector("div.bar")
+			bar.classList.add(effectClass[effect])
 			bar.setAttribute("style", `width: ${effectTally[effect]}px`)
-			value.append(` ${effectTally[effect]}`)
+			bar.after(` ${effectTally[effect]}`)
 		}
 
+		// Insert now so the height gets calculated.
+		table.appendChild(row)
+
 		// Resistant targets
-		let weaknessCell = row.insertCell()
-		let weaknessList = newChild(weaknessCell, "ul")
-		weaknessList.classList.add("boundedCell")
 		// Set height the same as the effectCell so the row doesn't grow without bounds.
 		weaknessList.setAttribute("style", `height: ${subtable.offsetHeight}px;`)
 
@@ -141,6 +158,49 @@ function printTable() {
 			listItem.textContent = weakness
 		}
 	}
+
+	// Old method of table population. Is there a difference? Idk.
+
+	// for (i; i < tableLength; i++) {
+	// 	const [attackTypes, effectTally, resistants] = effectivenessResults[i]
+
+	// 	let row = table.insertRow()
+	// 	row.classList.add("bigrow")
+
+	// 	// Moves
+	// 	row.insertCell().textContent = attackTypes
+
+	// 	// Effect tally
+	// 	let subtable = newChild(row.insertCell(), "tbody")
+	// 	subtable.classList.add("subtable")
+
+	// 	for (const effect of [4,2,1,0.5,0.25,0]) {
+	// 		if (effectTally[effect] == 0) continue
+
+	// 		let effectRow = subtable.insertRow()
+
+	// 		let multiplier = effectRow.insertCell()
+	// 		multiplier.classList.add("multiplier")
+	// 		multiplier.textContent = `${effectSymbol[effect]}×`
+
+	// 		let bar = newChild(effectRow.insertCell(), "div")
+	// 		bar.classList.add("bar", effectClass[effect])
+	// 		bar.setAttribute("style", `width: ${effectTally[effect]}px`)
+	// 		bar.after(` ${effectTally[effect]}`)
+	// 	}
+
+	// 	// Resistant targets
+	// 	let weaknessList = newChild(row.insertCell(), "ul")
+	// 	weaknessList.classList.add("boundedCell")
+	// 	// Set height the same as the effectCell so the row doesn't grow without bounds.
+	// 	weaknessList.setAttribute("style", `height: ${subtable.offsetHeight}px;`)
+
+	// 	for (const weakness of resistants){
+	// 		let listItem = newChild(weaknessList, "li")
+	// 		listItem.textContent = weakness
+	// 	}
+	// }
 }
+
 
 main()
