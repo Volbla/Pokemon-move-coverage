@@ -146,17 +146,16 @@ function printTable() {
 			bar.after(` ${effectTally[effect]}`)
 		}
 
-		// Insert now so the height gets calculated.
-		table.appendChild(row)
-
 		// Resistant targets
-		// Set height the same as the effectCell so the row doesn't grow without bounds.
-		weaknessList.setAttribute("style", `height: ${subtable.offsetHeight}px;`)
-
 		for (const weakness of resistants){
 			let listItem = newChild(weaknessList, "li")
 			listItem.textContent = weakness
 		}
+
+		table.appendChild(row)
+
+		// Set height the same as the effectCell so the row doesn't grow without bounds.
+		weaknessList.setAttribute("style", `height: ${subtable.offsetHeight}px;`)
 	}
 
 	// Old method of table population. Is there a difference? Idk.
