@@ -1,4 +1,4 @@
-import { calcBestEffectiveness } from "./calculation.js"
+import { calcBestEffectiveness, sortTally } from "./calculation.js"
 
 const effectSymbol = { 4:4, 2:2, 1:1, 0.5:"½", 0.25:"¼", 0:0 }
 const effectClass = {
@@ -110,6 +110,7 @@ function updateTable() {
 	i = 0
 	tableLength = 10
 	effectivenessResults = calcBestEffectiveness(moveCount, doExclude.a, doInclude.a)
+	sortTally(effectivenessResults, [2, 4], [0.5, 0.25, 0], true, false)
 
 	printTable()
 }

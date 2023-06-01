@@ -1,4 +1,4 @@
-export { calcBestEffectiveness }
+export { calcBestEffectiveness, sortTally }
 
 const TYPECOUNT = 18
 const typeNames = ["Normal", "Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark", "Fairy"]
@@ -73,21 +73,37 @@ function calcBestEffectiveness(moveCount, excludeTypes, includeTypes) {
 		}
 	}
 
-	// Sorting by effectiveness count
-	function get(i) {
+	return results
+}
+
+
+function sortTally(tally, goodList, badList, bundleGood, bundleBad) {
+	function getCount(i) {
 		return (a, b) => a[1][i] - b[1][i]
 	}
 
-	// The most super-effective. Sum 2x and 4x. Negate for descending order.
-	results.sort((a, b) => -(get(2)(a, b) + get(4)(a, b)))
-	// The fewest weak or non-effective
-	// for (const bad of [0.5, 0.25, 0]){
-	// 	results.sort(get(bad))
-	// }
-	// results.sort( (a, b) => get(0.5)(a, b) + get(0.25)(a, b) + get(0)(a, b) )
-	results.sort( (a, b) => [0.5, 0.25, 0].reduce((c, d) => c + get(d)(a, b), 0) )
+	function orderedSort(listy, stuff, descending) {
+		let sign = descending ? -1 : 1
+		for (const thing of stuff){
+			listy.sort((a, b) => sign * getCount(thing)(a, b))
+		}
+	}
+	function bundleSort(listy, stuff, descending) {
+		let sign = descending ? -1 : 1
+		listy.sort((a, b) =>
+			stuff.reduce((c, d) => c + sign * getCount(d)(a, b), 0)
+		)
+	}
 
-	return results
+	if (bundleGood)
+		bundleSort(tally, goodList, true)
+	else
+		orderedSort(tally, goodList, true)
+
+	if (bundleBad)
+		bundleSort(tally, badList, false)
+	else
+		orderedSort(tally, badList, false)
 }
 
 
