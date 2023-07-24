@@ -33,7 +33,7 @@ function templateRow() {
 function templateBar() {
 	let thisrow = document.createElement("tr")
 	thisrow.insertCell().classList.add("multiplier")
-	newChild(thisrow.insertCell(), "div").classList.add("bar")
+	newChild(thisrow.insertCell(), "span").classList.add("bar")
 
 	return thisrow
 }
@@ -52,13 +52,13 @@ function main() {
 		let button = event.target
 		let type = button.innerHTML
 
-		if (listVariable.a.includes(type)) {
-			let i = listVariable.a.indexOf(type)
-			listVariable.a.splice(i, 1)
+		if (listVariable.includes(type)) {
+			let i = listVariable.indexOf(type)
+			listVariable.splice(i, 1)
 			button.classList.remove("active")
 		}
 		else {
-			listVariable.a.push(type)
+			listVariable.push(type)
 			button.classList.add("active")
 		}
 
@@ -73,13 +73,13 @@ function main() {
 	document.getElementById("includeReset").addEventListener("click", () => {
 		for (const button of shouldInclude)
 			button.classList.remove("active")
-		doInclude.a.splice(0)
+		doInclude.splice(0)
 		updateTable()
 	})
 	document.getElementById("excludeReset").addEventListener("click", () => {
 		for (const button of shouldExclude)
 			button.classList.remove("active")
-		doExclude.a.splice(0)
+		doExclude.splice(0)
 		updateTable()
 	})
 
@@ -94,8 +94,8 @@ function main() {
 
 
 let moveCount = 2
-let doInclude = {a: []}
-let doExclude = {a: []}
+let doInclude = []
+let doExclude = []
 
 let effectivenessResults
 let tableLength = 10
@@ -103,15 +103,13 @@ let i = 0
 
 
 function updateTable() {
-	while (table.firstChild) {
-		table.removeChild(table.firstChild);
-	}
-	loadMoreButton.removeAttribute("hidden")
 	i = 0
 	tableLength = 10
-	effectivenessResults = calcBestEffectiveness(moveCount, doExclude.a, doInclude.a)
+	effectivenessResults = calcBestEffectiveness(moveCount, doExclude, doInclude)
 	sortTally(effectivenessResults, [2, 4], [0.5, 0.25, 0], true, false)
 
+	table.replaceChildren()
+	loadMoreButton.removeAttribute("hidden")
 	printTable()
 }
 
@@ -141,7 +139,7 @@ function printTable() {
 
 			effectRow.firstElementChild.textContent = `${effectSymbol[effect]}×`
 
-			let bar = effectRow.querySelector("div.bar")
+			let bar = effectRow.querySelector("span.bar")
 			bar.classList.add(effectClass[effect])
 			bar.setAttribute("style", `width: ${effectTally[effect]}px`)
 			bar.after(` ${effectTally[effect]}`)
