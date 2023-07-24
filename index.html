@@ -120,6 +120,10 @@
 		span.timesZero { background: #000 }
 
 		.boundedCell {
+			position: relative;
+		}
+
+		.boundedList {
 			text-align: center;
 			font-size: 87%;
 			color: gray;
@@ -129,6 +133,11 @@
 			list-style-type: none;
 			margin: 0;
 			padding: 0;
+
+			position: absolute;
+			height: calc(100% - 10px);
+			width: calc(100% - 10px);
+			top: 5px;
 		}
 
 	</style>

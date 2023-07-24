@@ -25,7 +25,9 @@ function templateRow() {
 	therow.classList.add("bigrow")
 	therow.insertCell()
 	newChild(therow.insertCell(), "tbody").classList.add("subtable")
-	newChild(therow.insertCell(), "ul").classList.add("boundedCell")
+	let boundedCell = therow.insertCell()
+	boundedCell.classList.add("boundedCell")
+	newChild(boundedCell, "ul").classList.add("boundedList")
 
 	return therow
 }
@@ -36,6 +38,26 @@ function templateBar() {
 	newChild(thisrow.insertCell(), "span").classList.add("bar")
 
 	return thisrow
+}
+
+function measureGreatestTypeWidth() {
+	// Used to fix the column width of resistant targets.
+	// This will probably break if you zoom the page.
+
+	let dummyRow = templateRow()
+	let weaknessList = dummyRow.querySelector("ul")
+	// Remove the default sizing so that it depends on the content rather than the parent.
+	weaknessList.setAttribute("style", "position: static; width: auto;")
+	let listItem = newChild(weaknessList, "li")
+
+	// The longest type name in defenders.json
+	listItem.textContent = "Fighting/Electric (Volt Absorb)"
+
+	table.appendChild(dummyRow)
+	let header = table.previousElementSibling.firstElementChild.lastElementChild
+	header.setAttribute("style", `width: ${header.clientWidth}px;`)
+
+	table.replaceChildren()
 }
 
 
@@ -83,6 +105,7 @@ function main() {
 		updateTable()
 	})
 
+	measureGreatestTypeWidth()
 	moveCountButtons[moveCount - 1].classList.add("active")
 	updateTable()
 
@@ -120,6 +143,8 @@ function printTable() {
 		tableLength = effectivenessResults.length
 	}
 
+	let newRows = []
+
 	for (i; i < tableLength; i++) {
 		const [attackTypes, effectTally, resistants] = effectivenessResults[i]
 
@@ -151,11 +176,10 @@ function printTable() {
 			listItem.textContent = weakness
 		}
 
-		table.appendChild(row)
-
-		// Set height the same as the effectCell so the row doesn't grow without bounds.
-		weaknessList.setAttribute("style", `height: ${subtable.offsetHeight}px;`)
+		newRows.push(row)
 	}
+
+	table.append(...newRows)
 }
 
 
