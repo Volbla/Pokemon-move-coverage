@@ -10,9 +10,14 @@ const effectClass = {
 	0:"timesZero"
 }
 
+const moveCountButtons = document.getElementsByClassName("countButton")
 const shouldInclude = document.getElementById("includeTypes").children
 const shouldExclude = document.getElementById("excludeTypes").children
-const moveCountButtons = document.getElementsByClassName("countButton")
+
+const checkBoxes = document.getElementsByTagName("input")
+const shouldBundleGood = checkBoxes[0]
+const shouldBundleBad = checkBoxes[1]
+
 const table = document.querySelector("tbody")
 const loadMoreButton = document.getElementById("loadMore")
 
@@ -105,14 +110,18 @@ function main() {
 		updateTable()
 	})
 
-	measureGreatestTypeWidth()
-	moveCountButtons[moveCount - 1].classList.add("active")
-	updateTable()
+	for (const box of checkBoxes)
+		box.addEventListener("click", () => { updateTable(false) })
 
 	loadMoreButton.addEventListener("click", () => {
 		tableLength += 10
 		printTable()
 	})
+
+
+	measureGreatestTypeWidth()
+	moveCountButtons[moveCount - 1].classList.add("active")
+	updateTable()
 }
 
 
@@ -125,11 +134,18 @@ let tableLength = 10
 let i = 0
 
 
-function updateTable() {
+function updateTable(recalculate=true) {
 	i = 0
 	tableLength = 10
-	effectivenessResults = calcBestEffectiveness(moveCount, doExclude, doInclude)
-	sortTally(effectivenessResults, [2, 4], [0.5, 0.25, 0], true, false)
+	if (recalculate)
+		effectivenessResults = calcBestEffectiveness(moveCount, doExclude, doInclude)
+
+	sortTally(
+		effectivenessResults,
+		[2, 4], [0.5, 0.25, 0],
+		shouldBundleGood.checked,
+		shouldBundleBad.checked
+	)
 
 	table.replaceChildren()
 	loadMoreButton.removeAttribute("hidden")

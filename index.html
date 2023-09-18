@@ -64,7 +64,7 @@
 		}
 		.typegrid > button {
 			color: white;
-			text-shadow: 1px 1px black;
+			text-shadow: 1px 1px 3px #333, -1px -1px 3px #333;
 		}
 
 		.type-normal { background:#A8A878; }
@@ -165,6 +165,10 @@
 			margin: 0;
 			padding-left: 20px;
 		}
+		label {
+			font-size: 85%;
+			margin: 0 1em;
+		}
 	</style>
 
 </head>
@@ -259,6 +263,10 @@
 			</div>
 			<button id="excludeReset">reset</button>
 		</div>
+	</div>
+	<div>
+		<label><input type="checkbox" checked>Bundle effective</label>
+		<label><input type="checkbox">Bundle non-effective</label>
 	</div>
 </header>
 
