@@ -45,13 +45,25 @@
 		h1 {
 			margin: 0px;
 		}
-		button {
+		label, summary, button {
+			cursor: pointer;
+		}
+		input[type="checkbox"], input[type="radio"] {
+			display: none;
+		}
+		
+		button, label {
 			border: 1px solid black;
 			border-radius: 3px;
 			margin: 3px;
 			min-width: 3.2ch;
+			font-size: 0.8rem;
+			padding-block-end: 1px;
+			padding-block-start: 1px;
+			padding-inline-start: 6px;
+			padding-inline-end: 6px;
 		}
-		button.active {
+		label:has(input:checked) {
 			outline: outset 3px #d5d819;
 		}
 
@@ -62,7 +74,7 @@
 			display: grid;
 			grid-template-columns: repeat(4, 8.5ch);
 		}
-		.typegrid > button {
+		.typegrid > label {
 			color: white;
 			text-shadow: 1px 1px 3px #333, -1px -1px 3px #333;
 		}
@@ -165,125 +177,122 @@
 			margin: 0;
 			padding-left: 20px;
 		}
-		label {
-			font-size: 85%;
-			margin: 0 1em;
-		}
 	</style>
 
 </head>
 
 <body>
-<header>
-	<h1>Coverage Calculator</h1>
-	<details>
-		<summary>What is this?</summary>
+	<header>
+		<h1>Coverage Calculator</h1>
+		<details>
+			<summary>What is this?</summary>
+			<div>
+				<p style="margin-top: 0;">
+					This tool is meant to help people building pokemon teams
+					to figure out what move coverage they might need. It compares
+					a set of attacking moves against all defensive profiles
+					in the games. The most effective move gets tallied, and
+					the result is summarized in a list.
+				</p>
+				<p style="margin: 0;">
+					The list is sorted by (in order of importance):
+				</p>
+				<ul>
+					<li>The fewest immune targets.</li>
+					<li>The fewest quad-resists.</li>
+					<li>The fewest half-resists.</li>
+					<li>The most supereffective targets (including both 2× and 4×)</li>
+				</ul>
+				<p>
+					Abilities that give resistances or immunities are only tallied
+					when a set of attacks can't hit it for at least neutral damage.
+				</p>
+				<p style="margin-bottom: 0;">
+					The attacking moves can be filtered by selecting which types to
+					always include (e.g. a STAB-move) or to exclude (e.g. when a pokemon
+					doesn't learn a move of that type).
+				</p>
+			</div>
+		</details>
+
 		<div>
-			<p style="margin-top: 0;">
-				This tool is meant to help people building pokemon teams
-				to figure out what move coverage they might need. It compares
-				a set of attacking moves against all defensive profiles
-				in the games. The most effective move gets tallied, and
-				the result is summarized in a list.
-			</p>
-			<p style="margin: 0;">
-				The list is sorted by (in order of importance):
-			</p>
-			<ul>
-				<li>The fewest immune targets.</li>
-				<li>The fewest quad-resists.</li>
-				<li>The fewest half-resists.</li>
-				<li>The most supereffective targets (including both 2× and 4×)</li>
-			</ul>
-			<p>
-				Abilities that give resistances or immunities are only tallied
-				when a set of attacks can't hit it for at least neutral damage.
-			</p>
-			<p style="margin-bottom: 0;">
-				The attacking moves can be filtered by selecting which types to
-				always include (e.g. a STAB-move) or to exclude (e.g. when a pokemon
-				doesn't learn a move of that type).
-			</p>
+			Number of attacking moves<br>
+			<label>1<input type="radio" name="count" class="countButton" value="1"></label>
+			<label>2<input type="radio" name="count" class="countButton" value="2" checked></label>
+			<label>3<input type="radio" name="count" class="countButton" value="3"></label>
+			<label>4<input type="radio" name="count" class="countButton" value="4"></label>
 		</div>
-	</details>
-
-	<div>
-		Number of attacking moves<br>
-		<button class="countButton">1</button>
-		<button class="countButton">2</button>
-		<button class="countButton">3</button>
-		<button class="countButton">4</button>
-	</div>
-	<div style="display: flex; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
-		<div class="buttonPanel">
-			Include these types
-			<div id="includeTypes" class="typegrid">
-				<button class="type-normal">Normal</button>
-				<button class="type-fighting">Fighting</button>
-				<button class="type-flying">Flying</button>
-				<button class="type-poison">Poison</button>
-				<button class="type-ground">Ground</button>
-				<button class="type-rock">Rock</button>
-				<button class="type-bug">Bug</button>
-				<button class="type-ghost">Ghost</button>
-				<button class="type-steel">Steel</button>
-				<button class="type-fire">Fire</button>
-				<button class="type-water">Water</button>
-				<button class="type-grass">Grass</button>
-				<button class="type-electric">Electric</button>
-				<button class="type-psychic">Psychic</button>
-				<button class="type-ice">Ice</button>
-				<button class="type-dragon">Dragon</button>
-				<button class="type-dark">Dark</button>
-				<button class="type-fairy">Fairy</button>
-			</div>
-			<button id="includeReset">reset</button>
+		<div style="display: flex; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+			<form class="buttonPanel">
+				Include these types
+				<div id="includeTypes" class="typegrid">
+					<label class="type-normal">Normal<input type="checkbox"></label>
+					<label class="type-fighting">Fighting<input type="checkbox"></label>
+					<label class="type-flying">Flying<input type="checkbox"></label>
+					<label class="type-poison">Poison<input type="checkbox"></label>
+					<label class="type-ground">Ground<input type="checkbox"></label>
+					<label class="type-rock">Rock<input type="checkbox"></label>
+					<label class="type-bug">Bug<input type="checkbox"></label>
+					<label class="type-ghost">Ghost<input type="checkbox"></label>
+					<label class="type-steel">Steel<input type="checkbox"></label>
+					<label class="type-fire">Fire<input type="checkbox"></label>
+					<label class="type-water">Water<input type="checkbox"></label>
+					<label class="type-grass">Grass<input type="checkbox"></label>
+					<label class="type-electric">Electric<input type="checkbox"></label>
+					<label class="type-psychic">Psychic<input type="checkbox"></label>
+					<label class="type-ice">Ice<input type="checkbox"></label>
+					<label class="type-dragon">Dragon<input type="checkbox"></label>
+					<label class="type-dark">Dark<input type="checkbox"></label>
+					<label class="type-fairy">Fairy<input type="checkbox"></label>
+				</div>
+				<button id="includeReset" type="reset">reset</button>
+			</form>
+			<form class="buttonPanel">
+				Exclude these types
+				<div id="excludeTypes" class="typegrid">
+					<label class="type-normal">Normal<input type="checkbox"></label>
+					<label class="type-fighting">Fighting<input type="checkbox"></label>
+					<label class="type-flying">Flying<input type="checkbox"></label>
+					<label class="type-poison">Poison<input type="checkbox"></label>
+					<label class="type-ground">Ground<input type="checkbox"></label>
+					<label class="type-rock">Rock<input type="checkbox"></label>
+					<label class="type-bug">Bug<input type="checkbox"></label>
+					<label class="type-ghost">Ghost<input type="checkbox"></label>
+					<label class="type-steel">Steel<input type="checkbox"></label>
+					<label class="type-fire">Fire<input type="checkbox"></label>
+					<label class="type-water">Water<input type="checkbox"></label>
+					<label class="type-grass">Grass<input type="checkbox"></label>
+					<label class="type-electric">Electric<input type="checkbox"></label>
+					<label class="type-psychic">Psychic<input type="checkbox"></label>
+					<label class="type-ice">Ice<input type="checkbox"></label>
+					<label class="type-dragon">Dragon<input type="checkbox"></label>
+					<label class="type-dark">Dark<input type="checkbox"></label>
+					<label class="type-fairy">Fairy<input type="checkbox"></label>
+				</div>
+				<button id="excludeReset" type="reset">reset</button>
+			</form>
 		</div>
-		<div class="buttonPanel">
-			Exclude these types
-			<div id="excludeTypes" class="typegrid">
-				<button class="type-normal">Normal</button>
-				<button class="type-fighting">Fighting</button>
-				<button class="type-flying">Flying</button>
-				<button class="type-poison">Poison</button>
-				<button class="type-ground">Ground</button>
-				<button class="type-rock">Rock</button>
-				<button class="type-bug">Bug</button>
-				<button class="type-ghost">Ghost</button>
-				<button class="type-steel">Steel</button>
-				<button class="type-fire">Fire</button>
-				<button class="type-water">Water</button>
-				<button class="type-grass">Grass</button>
-				<button class="type-electric">Electric</button>
-				<button class="type-psychic">Psychic</button>
-				<button class="type-ice">Ice</button>
-				<button class="type-dragon">Dragon</button>
-				<button class="type-dark">Dark</button>
-				<button class="type-fairy">Fairy</button>
-			</div>
-			<button id="excludeReset">reset</button>
+		<div>
+			<label>Bundle effective<input type="checkbox" class="bundling" checked></label>
+			<label>Bundle non-effective<input type="checkbox" class="bundling"></label>
 		</div>
-	</div>
-	<div>
-		<label><input type="checkbox" checked>Bundle effective</label>
-		<label><input type="checkbox">Bundle non-effective</label>
-	</div>
-</header>
+	</header>
 
-<main>
-	<table class="center">
-		<thead>
-			<tr>
-				<th scope="col">Attacking types</th>
-				<th scope="col">Best effect tally</th>
-				<th scope="col">Resistant targets</th>
-			</tr>
-		</thead>
-		<tbody>
+	<main>
+		<table class="center">
+			<thead>
+				<tr>
+					<th scope="col">Attacking types</th>
+					<th scope="col">Best effect tally</th>
+					<th scope="col">Resistant targets</th>
+				</tr>
+			</thead>
+			<tbody>
 
-		</tbody>
-	</table>
-	<button id="loadMore">Load more</button>
-</main>
+			</tbody>
+		</table>
+		<button id="loadMore">Load more</button>
+	</main>
 </body>
+
 </html>
