@@ -1,20 +1,20 @@
 import { calcBestEffectiveness, sortTally } from "./calculation.js"
 
-const effectSymbol = { 4:4, 2:2, 1:1, 0.5:"½", 0.25:"¼", 0:0 }
+const effectSymbol = { 4: 4, 2: 2, 1: 1, 0.5: "½", 0.25: "¼", 0: 0 }
 const effectClass = {
-	4:"timesFour",
-	2:"timesTwo",
-	1:"timesOne",
-	0.5:"timesHalf",
-	0.25:"timesQuarter",
-	0:"timesZero"
+	4: "timesFour",
+	2: "timesTwo",
+	1: "timesOne",
+	0.5: "timesHalf",
+	0.25: "timesQuarter",
+	0: "timesZero"
 }
 
 const moveCountButtons = document.getElementsByClassName("countButton")
-const shouldInclude = document.getElementById("includeTypes").children
-const shouldExclude = document.getElementById("excludeTypes").children
+const shouldInclude = document.getElementById("includeTypes").querySelectorAll("input")
+const shouldExclude = document.getElementById("excludeTypes").querySelectorAll("input")
 
-const checkBoxes = document.getElementsByTagName("input")
+const checkBoxes = document.getElementsByClassName("bundling")
 const shouldBundleGood = checkBoxes[0]
 const shouldBundleBad = checkBoxes[1]
 const shouldPrioritizeBad = document.getElementsByTagName("select")[0]
@@ -68,51 +68,12 @@ function measureGreatestTypeWidth() {
 
 
 function main() {
-	for (const button of moveCountButtons) {
-		button.addEventListener("click", () => {
-			button.parentElement.querySelector("button.active").classList.remove("active")
-			button.classList.add("active")
-			moveCount = parseInt(button.innerHTML)
-			updateTable()
-		})
+	for (const inp of document.getElementsByTagName("input")) {
+		inp.addEventListener("click", event => updateTable(!event.target.classList.contains("bundling")))
 	}
-	function typeButton(listVariable) { return event => {
-		let button = event.target
-		let type = button.innerHTML
 
-		if (listVariable.includes(type)) {
-			let i = listVariable.indexOf(type)
-			listVariable.splice(i, 1)
-			button.classList.remove("active")
-		}
-		else {
-			listVariable.push(type)
-			button.classList.add("active")
-		}
-
-		updateTable()
-	}}
-
-	for (const button of shouldInclude)
-		button.addEventListener("click", typeButton(doInclude))
-	for (const button of shouldExclude)
-		button.addEventListener("click", typeButton(doExclude))
-
-	document.getElementById("includeReset").addEventListener("click", () => {
-		for (const button of shouldInclude)
-			button.classList.remove("active")
-		doInclude.splice(0)
-		updateTable()
-	})
-	document.getElementById("excludeReset").addEventListener("click", () => {
-		for (const button of shouldExclude)
-			button.classList.remove("active")
-		doExclude.splice(0)
-		updateTable()
-	})
-
-	for (const box of checkBoxes)
-		box.addEventListener("click", () => { updateTable(false) })
+	document.getElementById("includeReset").addEventListener("click", () => setTimeout(updateTable, 1), { passive: true })
+	document.getElementById("excludeReset").addEventListener("click", () => setTimeout(updateTable, 1), { passive: true })
 
 	shouldPrioritizeBad.addEventListener("change", () => { updateTable(false) })
 
@@ -123,25 +84,43 @@ function main() {
 
 
 	measureGreatestTypeWidth()
-	moveCountButtons[moveCount - 1].classList.add("active")
+	// moveCountButtons[moveCount - 1].classList.add("active")
 	updateTable()
 }
 
 
-let moveCount = 2
-let doInclude = []
-let doExclude = []
+// let moveCount = 2
+// let doInclude = []
+// let doExclude = []
 
 let effectivenessResults
 let tableLength = 10
 let i = 0
 
 
-function updateTable(recalculate=true) {
+function updateTable(recalculate = true) {
 	i = 0
 	tableLength = 10
-	if (recalculate)
+
+	if (recalculate) {
+		let moveCount = Array.from(moveCountButtons, button => {
+			if (button.checked)
+				return Number.parseInt(button.value)
+		}).filter(val => val != undefined)[0]
+
+		let doInclude = Array.from(shouldInclude, button => {
+			if (button.checked)
+				return button.labels[0].textContent
+		}).filter(val => val != undefined)
+
+		let doExclude = Array.from(shouldExclude, button => {
+			if (button.checked)
+				return button.labels[0].textContent
+		}).filter(val => val != undefined)
+
+		console.log(moveCount, doInclude, doExclude)
 		effectivenessResults = calcBestEffectiveness(moveCount, doExclude, doInclude)
+	}
 
 	sortTally(
 		effectivenessResults,
@@ -176,7 +155,7 @@ function printTable() {
 		movesCell.textContent = attackTypes
 
 		// Effect tally
-		for (const effect of [4,2,1,0.5,0.25,0]) {
+		for (const effect of [4, 2, 1, 0.5, 0.25, 0]) {
 			if (effectTally[effect] == 0) continue
 
 			let effectRow = subtable.appendChild(templateBar())
@@ -190,7 +169,7 @@ function printTable() {
 		}
 
 		// Resistant targets
-		for (const weakness of resistants){
+		for (const weakness of resistants) {
 			let listItem = newChild(weaknessList, "li")
 			listItem.textContent = weakness
 		}

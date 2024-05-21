@@ -1,15 +1,13 @@
 /* How to make the head's background cover the full width,
 while not shifting any content around when the scrollbar toggles. */
-/*
-html, body {
+/* html, body {
 	height: 100%;
 	overflow: auto;
 	overflow-x: hidden;
 }
 header, main {
 	width: 100vw;
-}
-*/
+} */
 /* Wtf is that. */
 
 
@@ -36,8 +34,11 @@ main {
 	margin: 0px auto;
 }
 
-button, summary, .checkbox {
+label, summary, button {
 	cursor: pointer;
+}
+input[type="checkbox"], input[type="radio"] {
+	display: none;
 }
 
 
@@ -68,36 +69,38 @@ details>div>ul {
 	margin: 0;
 	padding-left: 20px;
 }
-
 #options > * {
 	font-size: 85%;
 	margin: 0 1em;
 }
 
-
 /* Grid of type-buttons */
 
-button {
+button, label {
 	border: 1px solid black;
 	border-radius: 3px;
 	margin: 3px;
-	min-width: 3.4ch;
+	min-width: 3.2ch;
+	font-size: 0.8rem;
+	padding-block-end: 1px;
+	padding-block-start: 1px;
+	padding-inline-start: 6px;
+	padding-inline-end: 6px;
 }
-button.active {
+
+label:has(input:checked) {
 	outline: outset 3px #d5d819;
 }
 
 .buttonPanel {
-	margin: 12px;
+	margin: 5px;
 }
 .typegrid {
 	display: grid;
 	grid-template-columns: repeat(4, 8.5ch);
 }
-.typegrid > button {
+.typegrid > label {
 	color: white;
-	font-size: 85%;
-	padding: 1.5px;
 	text-shadow: 1px 1px 3px #333, -1px -1px 3px #333;
 }
 
