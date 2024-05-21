@@ -1,0 +1,28 @@
+<svg version="2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+
+<style type="text/css">
+:root {
+	--line-thickness: 6px;
+	--margin: calc(var(--line-thickness) / 2);
+}
+g { stroke-width: var(--line-thickness); }
+#edge { r: calc(50px - var(--margin)); }
+circle { cx: 50px; cy: 50px; }
+</style>
+
+<circle fill="white" r="49" />
+<path fill="#FF1C1C" d="
+	M 1 50
+	A 49 49
+	  180
+	  1 1
+	  99 50
+	z "
+/>
+<g stroke="black">
+	<circle id="edge" fill="none" />
+	<line x1="1" y1="50" x2="99" y2="50" />
+	<circle r="13" fill="white" />
+</g>
+
+</svg>

@@ -69,7 +69,10 @@ details>div>ul {
 	margin: 0;
 	padding-left: 20px;
 }
-
+#options > * {
+	font-size: 85%;
+	margin: 0 1em;
+}
 
 /* Grid of type-buttons */
 
@@ -84,6 +87,7 @@ button, label {
 	padding-inline-start: 6px;
 	padding-inline-end: 6px;
 }
+
 label:has(input:checked) {
 	outline: outset 3px #d5d819;
 }

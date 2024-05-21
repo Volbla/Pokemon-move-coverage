@@ -5,6 +5,7 @@
 	<meta charset="utf-8" />
 	<title>Pokemon Coverage calculator</title>
 	<meta name="viewport" content="width=device-width" />
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
 	<link rel="stylesheet" href="style.css" />
 	<script src="main.js" type="module"></script>
@@ -105,7 +106,16 @@
 			<label>Bundle effective<input type="checkbox" class="bundling" checked></label>
 			<label>Bundle non-effective<input type="checkbox" class="bundling"></label>
 		</div>
-	</header>
+	</div>
+	<div id="options">
+		<label class="checkbox"><input type="checkbox" checked>Bundle effective</label>
+		<label class="checkbox"><input type="checkbox">Bundle non-effective</label>
+		<span>Priority <select name="order">
+			<option value="1">Fewest resistances</option>
+			<option value="">Most super-effective</option>
+		</select></span>
+	</div>
+</header>
 
 	<main>
 		<table class="center">
