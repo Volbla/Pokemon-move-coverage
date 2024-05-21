@@ -17,6 +17,7 @@ const shouldExclude = document.getElementById("excludeTypes").children
 const checkBoxes = document.getElementsByTagName("input")
 const shouldBundleGood = checkBoxes[0]
 const shouldBundleBad = checkBoxes[1]
+const shouldPrioritizeBad = document.getElementsByTagName("select")[0]
 
 const table = document.querySelector("tbody")
 const loadMoreButton = document.getElementById("loadMore")
@@ -113,6 +114,8 @@ function main() {
 	for (const box of checkBoxes)
 		box.addEventListener("click", () => { updateTable(false) })
 
+	shouldPrioritizeBad.addEventListener("change", () => { updateTable(false) })
+
 	loadMoreButton.addEventListener("click", () => {
 		tableLength += 10
 		printTable()
@@ -142,9 +145,9 @@ function updateTable(recalculate=true) {
 
 	sortTally(
 		effectivenessResults,
-		[2, 4], [0.5, 0.25, 0],
 		shouldBundleGood.checked,
-		shouldBundleBad.checked
+		shouldBundleBad.checked,
+		shouldPrioritizeBad.value
 	)
 
 	table.replaceChildren()

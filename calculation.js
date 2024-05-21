@@ -77,33 +77,36 @@ function calcBestEffectiveness(moveCount, excludeTypes, includeTypes) {
 }
 
 
-function sortTally(tally, goodList, badList, bundleGood, bundleBad) {
+function sortTally(tally, bundleGood, bundleBad, prioritizeBad) {
 	function getCount(i) {
 		return (a, b) => a[1][i] - b[1][i]
 	}
 
-	function orderedSort(listy, stuff, descending) {
+	function orderedSort(listy, options, descending) {
 		let sign = descending ? -1 : 1
-		for (const thing of stuff){
+		for (const thing of options){
 			listy.sort((a, b) => sign * getCount(thing)(a, b))
 		}
 	}
-	function bundleSort(listy, stuff, descending) {
+	function bundleSort(listy, options, descending) {
 		let sign = descending ? -1 : 1
 		listy.sort((a, b) =>
-			stuff.reduce((c, d) => c + sign * getCount(d)(a, b), 0)
+			options.reduce((c, d) => c + sign * getCount(d)(a, b), 0)
 		)
 	}
 
-	if (bundleGood)
-		bundleSort(tally, goodList, true)
-	else
-		orderedSort(tally, goodList, true)
+	const goodSort = bundleGood ? bundleSort : orderedSort
+	const badSort = bundleBad ? bundleSort : orderedSort
 
-	if (bundleBad)
-		bundleSort(tally, badList, false)
-	else
-		orderedSort(tally, badList, false)
+	const sorties = [
+		() => goodSort(tally, [2, 4], true),
+		() => badSort(tally, [0.5, 0.25, 0], false)
+	]
+
+	const order = prioritizeBad ? [0,1] : [1,0]
+	for (const i of order) {
+		sorties[i]()
+	}
 }
 
 
