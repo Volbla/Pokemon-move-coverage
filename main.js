@@ -14,9 +14,9 @@ const moveCountButtons = document.getElementsByClassName("countButton")
 const shouldInclude = document.getElementById("includeTypes").querySelectorAll("input")
 const shouldExclude = document.getElementById("excludeTypes").querySelectorAll("input")
 
-const checkBoxes = document.getElementsByClassName("bundling")
-const shouldBundleGood = checkBoxes[0]
-const shouldBundleBad = checkBoxes[1]
+const checkBoxes = document.getElementsByClassName("checkbox")
+const shouldBundleGood = checkBoxes[0].firstElementChild
+const shouldBundleBad = checkBoxes[1].firstElementChild
 const shouldPrioritizeBad = document.getElementsByTagName("select")[0]
 
 const table = document.querySelector("tbody")
