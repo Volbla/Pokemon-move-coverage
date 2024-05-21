@@ -44,7 +44,9 @@
 				</p>
 			</div>
 		</details>
+	</header>
 
+	<main>
 		<div>
 			Number of attacking moves<br>
 			<label>1<input type="radio" name="count" class="countButton" value="1"></label>
@@ -52,7 +54,8 @@
 			<label>3<input type="radio" name="count" class="countButton" value="3"></label>
 			<label>4<input type="radio" name="count" class="countButton" value="4"></label>
 		</div>
-		<div style="display: flex; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+
+		<div id="typeSelect">
 			<form class="buttonPanel">
 				Include these types
 				<div id="includeTypes" class="typegrid">
@@ -102,22 +105,18 @@
 				<button id="excludeReset" type="reset">reset</button>
 			</form>
 		</div>
-		<div>
-			<label>Bundle effective<input type="checkbox" class="bundling" checked></label>
-			<label>Bundle non-effective<input type="checkbox" class="bundling"></label>
-		</div>
-	</div>
-	<div id="options">
-		<label class="checkbox"><input type="checkbox" checked>Bundle effective</label>
-		<label class="checkbox"><input type="checkbox">Bundle non-effective</label>
-		<span>Priority <select name="order">
-			<option value="1">Fewest resistances</option>
-			<option value="">Most super-effective</option>
-		</select></span>
-	</div>
-</header>
 
-	<main>
+		<div id="options">
+			<label class="checkbox"><input type="checkbox" checked>Bundle effective</label>
+			<label class="checkbox"><input type="checkbox">Bundle non-effective</label>
+			<span>Priority <select name="order">
+				<option value="1">Fewest resistances</option>
+				<option value="">Most super-effective</option>
+			</select></span>
+		</div>
+
+		<hr>
+
 		<table class="center">
 			<thead>
 				<tr>
