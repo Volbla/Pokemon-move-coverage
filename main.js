@@ -10,14 +10,7 @@ const effectClass = {
 	0: "timesZero"
 }
 
-const moveCountButtons = document.getElementsByClassName("countButton")
-const shouldInclude = document.getElementById("includeTypes").querySelectorAll("input")
-const shouldExclude = document.getElementById("excludeTypes").querySelectorAll("input")
-
-const checkBoxes = document.getElementsByClassName("bundling")
-const shouldBundleGood = checkBoxes[0].firstElementChild
-const shouldBundleBad = checkBoxes[1].firstElementChild
-const shouldPrioritizeBad = document.getElementsByTagName("select")[0]
+const formElement = document.querySelector("form")
 
 const table = document.querySelector("tbody")
 const loadMoreButton = document.getElementById("loadMore")
@@ -71,27 +64,28 @@ function main() {
 	for (const inp of document.getElementsByTagName("input")) {
 		inp.addEventListener("click", event => updateTable(!event.target.classList.contains("bundling")))
 	}
+	document.getElementsByTagName("select")[0].addEventListener("change", () => { updateTable(false) })
 
-	document.getElementById("includeReset").addEventListener("click", () => setTimeout(updateTable, 1), { passive: true })
-	document.getElementById("excludeReset").addEventListener("click", () => setTimeout(updateTable, 1), { passive: true })
-
-	shouldPrioritizeBad.addEventListener("change", () => { updateTable(false) })
+	for (const button of document.getElementsByClassName("resetButton")) {
+		button.addEventListener("click", event => {
+			event.preventDefault()
+			const selection = event.target.name
+			for (const inp of formElement.querySelectorAll(`input[name="${selection}"]`)) {
+				inp.checked = false
+			}
+			updateTable()
+		})
+	}
 
 	loadMoreButton.addEventListener("click", () => {
 		tableLength += 10
 		printTable()
 	})
 
-
 	measureGreatestTypeWidth()
-	// moveCountButtons[moveCount - 1].classList.add("active")
 	updateTable()
 }
 
-
-// let moveCount = 2
-// let doInclude = []
-// let doExclude = []
 
 let effectivenessResults
 let tableLength = 10
@@ -101,32 +95,21 @@ let i = 0
 function updateTable(recalculate = true) {
 	i = 0
 	tableLength = 10
+	let formData = new FormData(formElement)
 
 	if (recalculate) {
-		let moveCount = Array.from(moveCountButtons, button => {
-			if (button.checked)
-				return Number.parseInt(button.value)
-		}).filter(val => val != undefined)[0]
+		let moveCount = Number.parseInt(formData.get("count"))
+		let doInclude = formData.getAll("includeTypes")
+		let doExclude = formData.getAll("excludeTypes")
 
-		let doInclude = Array.from(shouldInclude, button => {
-			if (button.checked)
-				return button.labels[0].textContent
-		}).filter(val => val != undefined)
-
-		let doExclude = Array.from(shouldExclude, button => {
-			if (button.checked)
-				return button.labels[0].textContent
-		}).filter(val => val != undefined)
-
-		console.log(moveCount, doInclude, doExclude)
 		effectivenessResults = calcBestEffectiveness(moveCount, doExclude, doInclude)
 	}
 
 	sortTally(
 		effectivenessResults,
-		shouldBundleGood.checked,
-		shouldBundleBad.checked,
-		shouldPrioritizeBad.value
+		formData.get("bundleGood"),
+		formData.get("bundleBad"),
+		formData.get("prioritizeBad")
 	)
 
 	table.replaceChildren()

@@ -47,73 +47,75 @@
 	</header>
 
 	<main>
-		<div>
-			Number of attacking moves<br>
-			<label>1<input type="radio" name="count" class="countButton" value="1"></label>
-			<label>2<input type="radio" name="count" class="countButton" value="2" checked></label>
-			<label>3<input type="radio" name="count" class="countButton" value="3"></label>
-			<label>4<input type="radio" name="count" class="countButton" value="4"></label>
-		</div>
+		<form>
+			<div>
+				Number of attacking moves<br>
+				<label>1<input type="radio" name="count" class="countButton" value="1"></label>
+				<label>2<input type="radio" name="count" class="countButton" value="2" checked></label>
+				<label>3<input type="radio" name="count" class="countButton" value="3"></label>
+				<label>4<input type="radio" name="count" class="countButton" value="4"></label>
+			</div>
 
-		<div id="typeSelect">
-			<form class="buttonPanel">
-				Include these types
-				<div id="includeTypes" class="typegrid">
-					<label class="type-normal">Normal<input type="checkbox"></label>
-					<label class="type-fighting">Fighting<input type="checkbox"></label>
-					<label class="type-flying">Flying<input type="checkbox"></label>
-					<label class="type-poison">Poison<input type="checkbox"></label>
-					<label class="type-ground">Ground<input type="checkbox"></label>
-					<label class="type-rock">Rock<input type="checkbox"></label>
-					<label class="type-bug">Bug<input type="checkbox"></label>
-					<label class="type-ghost">Ghost<input type="checkbox"></label>
-					<label class="type-steel">Steel<input type="checkbox"></label>
-					<label class="type-fire">Fire<input type="checkbox"></label>
-					<label class="type-water">Water<input type="checkbox"></label>
-					<label class="type-grass">Grass<input type="checkbox"></label>
-					<label class="type-electric">Electric<input type="checkbox"></label>
-					<label class="type-psychic">Psychic<input type="checkbox"></label>
-					<label class="type-ice">Ice<input type="checkbox"></label>
-					<label class="type-dragon">Dragon<input type="checkbox"></label>
-					<label class="type-dark">Dark<input type="checkbox"></label>
-					<label class="type-fairy">Fairy<input type="checkbox"></label>
+			<div id="typeSelect">
+				<div class="buttonPanel">
+					Include these types
+					<div class="typegrid">
+						<label class="type-normal">Normal<input value="Normal" name="includeTypes" type="checkbox"></label>
+						<label class="type-fighting">Fighting<input value="Fighting" name="includeTypes" type="checkbox"></label>
+						<label class="type-flying">Flying<input value="Flying" name="includeTypes" type="checkbox"></label>
+						<label class="type-poison">Poison<input value="Poison" name="includeTypes" type="checkbox"></label>
+						<label class="type-ground">Ground<input value="Ground" name="includeTypes" type="checkbox"></label>
+						<label class="type-rock">Rock<input value="Rock" name="includeTypes" type="checkbox"></label>
+						<label class="type-bug">Bug<input value="Bug" name="includeTypes" type="checkbox"></label>
+						<label class="type-ghost">Ghost<input value="Ghost" name="includeTypes" type="checkbox"></label>
+						<label class="type-steel">Steel<input value="Steel" name="includeTypes" type="checkbox"></label>
+						<label class="type-fire">Fire<input value="Fire" name="includeTypes" type="checkbox"></label>
+						<label class="type-water">Water<input value="Water" name="includeTypes" type="checkbox"></label>
+						<label class="type-grass">Grass<input value="Grass" name="includeTypes" type="checkbox"></label>
+						<label class="type-electric">Electric<input value="Electric" name="includeTypes" type="checkbox"></label>
+						<label class="type-psychic">Psychic<input value="Psychic" name="includeTypes" type="checkbox"></label>
+						<label class="type-ice">Ice<input value="Ice" name="includeTypes" type="checkbox"></label>
+						<label class="type-dragon">Dragon<input value="Dragon" name="includeTypes" type="checkbox"></label>
+						<label class="type-dark">Dark<input value="Dark" name="includeTypes" type="checkbox"></label>
+						<label class="type-fairy">Fairy<input value="Fairy" name="includeTypes" type="checkbox"></label>
+					</div>
+					<button name="includeTypes" class="resetButton">Reset</button>
 				</div>
-				<button id="includeReset" type="reset">reset</button>
-			</form>
-			<form class="buttonPanel">
-				Exclude these types
-				<div id="excludeTypes" class="typegrid">
-					<label class="type-normal">Normal<input type="checkbox"></label>
-					<label class="type-fighting">Fighting<input type="checkbox"></label>
-					<label class="type-flying">Flying<input type="checkbox"></label>
-					<label class="type-poison">Poison<input type="checkbox"></label>
-					<label class="type-ground">Ground<input type="checkbox"></label>
-					<label class="type-rock">Rock<input type="checkbox"></label>
-					<label class="type-bug">Bug<input type="checkbox"></label>
-					<label class="type-ghost">Ghost<input type="checkbox"></label>
-					<label class="type-steel">Steel<input type="checkbox"></label>
-					<label class="type-fire">Fire<input type="checkbox"></label>
-					<label class="type-water">Water<input type="checkbox"></label>
-					<label class="type-grass">Grass<input type="checkbox"></label>
-					<label class="type-electric">Electric<input type="checkbox"></label>
-					<label class="type-psychic">Psychic<input type="checkbox"></label>
-					<label class="type-ice">Ice<input type="checkbox"></label>
-					<label class="type-dragon">Dragon<input type="checkbox"></label>
-					<label class="type-dark">Dark<input type="checkbox"></label>
-					<label class="type-fairy">Fairy<input type="checkbox"></label>
+				<div class="buttonPanel">
+					Exclude these types
+					<div class="typegrid">
+						<label class="type-normal">Normal<input value="Normal" name="excludeTypes" type="checkbox"></label>
+						<label class="type-fighting">Fighting<input value="Fighting" name="excludeTypes" type="checkbox"></label>
+						<label class="type-flying">Flying<input value="Flying" name="excludeTypes" type="checkbox"></label>
+						<label class="type-poison">Poison<input value="Poison" name="excludeTypes" type="checkbox"></label>
+						<label class="type-ground">Ground<input value="Ground" name="excludeTypes" type="checkbox"></label>
+						<label class="type-rock">Rock<input value="Rock" name="excludeTypes" type="checkbox"></label>
+						<label class="type-bug">Bug<input value="Bug" name="excludeTypes" type="checkbox"></label>
+						<label class="type-ghost">Ghost<input value="Ghost" name="excludeTypes" type="checkbox"></label>
+						<label class="type-steel">Steel<input value="Steel" name="excludeTypes" type="checkbox"></label>
+						<label class="type-fire">Fire<input value="Fire" name="excludeTypes" type="checkbox"></label>
+						<label class="type-water">Water<input value="Water" name="excludeTypes" type="checkbox"></label>
+						<label class="type-grass">Grass<input value="Grass" name="excludeTypes" type="checkbox"></label>
+						<label class="type-electric">Electric<input value="Electric" name="excludeTypes" type="checkbox"></label>
+						<label class="type-psychic">Psychic<input value="Psychic" name="excludeTypes" type="checkbox"></label>
+						<label class="type-ice">Ice<input value="Ice" name="excludeTypes" type="checkbox"></label>
+						<label class="type-dragon">Dragon<input value="Dragon" name="excludeTypes" type="checkbox"></label>
+						<label class="type-dark">Dark<input value="Dark" name="excludeTypes" type="checkbox"></label>
+						<label class="type-fairy">Fairy<input value="Fairy" name="excludeTypes" type="checkbox"></label>
+					</div>
+					<button name="excludeTypes" class="resetButton">Reset</button>
 				</div>
-				<button id="excludeReset" type="reset">reset</button>
-			</form>
-		</div>
+			</div>
 
-		<div id="options">
-			<label class="bundling"><input type="checkbox" checked>Bundle effective</label>
-			<label class="bundling"><input type="checkbox">Bundle non-effective</label>
-			<span>Priority <select name="order">
-					<option value="1">Fewest resistances</option>
-					<option value="">Most super-effective</option>
-				</select></span>
-		</div>
+			<div id="sortingOptions">
+				<label>Bundle effective<input name="bundleGood" class="bundling" type="checkbox" checked></label>
+				<label>Bundle non-effective<input name="bundleBad" class="bundling" type="checkbox"></label>
+				<span>Priority <select name="prioritizeBad">
+						<option value="true">Fewest resistances</option>
+						<option value="">Most super-effective</option>
+					</select></span>
+			</div>
+		</form>
 
 		<hr>
 

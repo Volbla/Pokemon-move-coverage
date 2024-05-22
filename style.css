@@ -25,7 +25,7 @@ header {
 	flex-direction: column;
 	padding: 6px 0px;
 }
-main > * {
+main > *, form > * {
 	margin: 10px 0;
 }
 main, table {
@@ -85,7 +85,7 @@ label {
 label:has(input:checked) {
 	outline: outset 3px #d5d819;
 }
-#options > * {
+#sortingOptions > * {
 	font-size: 85%;
 	margin: 0 1em;
 }
