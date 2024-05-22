@@ -37,6 +37,7 @@ main {
 }
 
 label, summary, button {
+	user-select: none;
 	cursor: pointer;
 }
 input[type="checkbox"], input[type="radio"] {
