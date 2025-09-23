@@ -29,7 +29,9 @@ function calcBestEffectiveness(moveCount, excludeTypes, includeTypes) {
 		if (includeTypes && !allin(includeTypes, attacks))
 			continue
 
-		attackTypes = attacks.map(i => typeNames[i]).join(", ")
+		attackTypes = attacks.toSorted(
+			(a, b) => includeTypes.includes(b) - includeTypes.includes(a)
+		).map(i => typeNames[i]).join(", ")
 		tally = { 4: 0, 2: 0, 1: 0, 0.5: 0, 0.25: 0, 0: 0 }
 		heels = []
 
